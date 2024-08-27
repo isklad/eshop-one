@@ -1,0 +1,58 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "918aec0977e1efa5c4669485f0f34b1b",
+    "packages": [
+        {
+            "name": "isklad/myorder-cart-widget-middleware",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:isklad/myorder-cart-widget-middleware.git",
+                "reference": "496dfbcc6616ba797e05e6673b0ae8f06e3f3398"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/496dfbcc6616ba797e05e6673b0ae8f06e3f3398",
+                "reference": "496dfbcc6616ba797e05e6673b0ae8f06e3f3398",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Isklad\\MyorderCartWidgetMiddleware\\": "src"
+                }
+            },
+            "description": "Isklad Myorder cart widget middleware.",
+            "support": {
+                "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/main",
+                "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
+            },
+            "time": "2024-08-26T11:40:59+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "isklad/myorder-cart-widget-middleware": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "ext-curl": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}
