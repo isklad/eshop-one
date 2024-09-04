@@ -1,23 +1,16 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new \Isklad\MyorderCartWidgetMiddleware\IskladApp(
-    new \Isklad\MyorderCartWidgetMiddleware\IskladEnv(
-        '01914a9a-c7ea-7e83-8a3f-dedfca0d391f',
-        '01914a9a-c7ea-7e83-8a3f-dedfca0d391f',
-        34,
-        __DIR__ . '/../data',
-        'https://myorder.local/widget/cart/shop/',
-        'https://auth.local/auth/access-token',
-        'https://auth.local/api/client/device-identity-request',
-        'https://myorder.local',
-        '_isklad_deviceId',
-        '_isklad_deviceIdentityRequestId',
-        '_isklad_csrf_token',
-        true,
-    )
-);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
+use Isklad\MyorderCartWidgetMiddleware\IskladApp;
+use Isklad\MyorderCartWidgetMiddleware\IskladEnv;
+
+$app = new IskladApp(
+    IskladEnv::fromIniFile(__DIR__ . '/../env.ini')
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +23,7 @@ $app = new \Isklad\MyorderCartWidgetMiddleware\IskladApp(
 <isklad-myorder
         myorder-api-url="https://shop-one.local/myorder.php"
         csrf-token="<?= $app->getCsrfToken() ?>"
+        google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
         role="shippingBtn"
         show-modal="<?= $app->isShowWidgetModal() ?>"
