@@ -2,7 +2,9 @@
 Example implementation of myorder-cart-**widget** and myorder-cart-widget-**middleware**.
 
 # Add middleware.
-The myorder-cart-widget-middleware service is required for secure communication with
+The myorder-cart-widget-middleware service is required for secure communication with isklad services.
+The example below expects the middleware instance `$app`.
+To set up the middleware correctly, follow the documentation on https://github.com/isklad/myorder-cart-widget-middleware.
 
 # Add widget
 ```html
