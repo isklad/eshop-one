@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment where to execute the command'
+        description: 'Environment'
         required: true
         type: choice
         default: test
