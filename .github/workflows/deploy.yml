@@ -24,6 +24,7 @@ jobs:
     name: Prepare
     runs-on: test01
     outputs:
+      runner_name: ${{ steps.env.outputs.runner_name }}
       branch: ${{ steps.env.outputs.branch }}
       repository_name: ${{ steps.env.outputs.repository_name }}
       docker_gw_ip: ${{ steps.env.outputs.docker_gw_ip }}
@@ -31,6 +32,7 @@ jobs:
       - name: Setup env
         id: env
         run: |
+          echo "runner_name=${{ runner.name }}" >> $GITHUB_OUTPUT
           echo "branch=${{ github.event.inputs.branch || github.ref_name }}" >> $GITHUB_OUTPUT
           echo "repository_name=${GITHUB_REPOSITORY##*/}" >> $GITHUB_OUTPUT
           echo "docker_gw_ip=$(ip route | grep default | awk '{print $3}')" >> $GITHUB_OUTPUT
@@ -57,7 +59,7 @@ jobs:
   composer:
     name: Composer install
     needs: [prepare]
-    runs-on: test01
+    runs-on: ${{ needs.prepare.outputs.runner_name }}
     steps:
       - name: Get composer cache files directory
         id: composer_cache
@@ -83,7 +85,7 @@ jobs:
   build-images:
     name: Build images
     needs: [prepare, composer]
-    runs-on: test01
+    runs-on: ${{ needs.prepare.outputs.runner_name }}
     strategy:
       matrix:
         image: [nginx, php]
@@ -121,7 +123,7 @@ jobs:
   deploy:
     name: Deploy containers
     needs: [prepare, build-images]
-    runs-on: test01
+    runs-on: ${{ needs.prepare.outputs.runner_name }}
     env:
       TEMPLATE_FILE: docker/deploy/docker-compose.j2
       RENDERED_FILE: /opt/docker-compose/docker-compose-${{ needs.prepare.outputs.repository_name }}.yml
