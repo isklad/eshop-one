@@ -75,6 +75,8 @@ jobs:
           composer validate --no-check-all
 
       - name: Install composer dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GHA_RUNNER_TOKEN }}"}}'
         run: |
           composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction --optimize-autoloader
 
