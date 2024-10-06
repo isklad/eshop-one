@@ -22,7 +22,7 @@ on:
 jobs:
   prepare:
     name: Prepare
-    runs-on: test01-2
+    runs-on: test01
     outputs:
       branch: ${{ steps.env.outputs.branch }}
       repository_name: ${{ steps.env.outputs.repository_name }}
@@ -57,7 +57,7 @@ jobs:
   composer:
     name: Composer install
     needs: [prepare]
-    runs-on: test01-2
+    runs-on: test01
     steps:
       - name: Get composer cache files directory
         id: composer_cache
@@ -83,10 +83,11 @@ jobs:
   build-images:
     name: Build images
     needs: [prepare, composer]
-    runs-on: test01-2
+    runs-on: test01
     strategy:
       matrix:
         image: [nginx, php]
+      max-parallel: 1
     steps:
       - name: Log in to github container registry
         uses: docker/login-action@v3
@@ -120,7 +121,7 @@ jobs:
   deploy:
     name: Deploy containers
     needs: [prepare, build-images]
-    runs-on: test01-2
+    runs-on: test01
     env:
       TEMPLATE_FILE: docker/deploy/docker-compose.j2
       RENDERED_FILE: /opt/docker-compose/docker-compose-${{ needs.prepare.outputs.repository_name }}.yml
