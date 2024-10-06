@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "918aec0977e1efa5c4669485f0f34b1b",
+    "content-hash": "e32ee020eaae6d383530f96c6dfd78dd",
     "packages": [
         {
             "name": "isklad/myorder-cart-widget-middleware",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:isklad/myorder-cart-widget-middleware.git",
-                "reference": "496dfbcc6616ba797e05e6673b0ae8f06e3f3398"
+                "reference": "2ff673059f490f55b40b11d5d32b5002da468ed4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/496dfbcc6616ba797e05e6673b0ae8f06e3f3398",
-                "reference": "496dfbcc6616ba797e05e6673b0ae8f06e3f3398",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/2ff673059f490f55b40b11d5d32b5002da468ed4",
+                "reference": "2ff673059f490f55b40b11d5d32b5002da468ed4",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
                 "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/main",
                 "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
             },
-            "time": "2024-08-26T11:40:59+00:00"
+            "time": "2024-09-24T07:01:22+00:00"
         }
     ],
     "packages-dev": [],
