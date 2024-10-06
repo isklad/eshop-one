@@ -80,7 +80,7 @@ jobs:
 
   build-images:
     name: Build images
-    needs: [prepare]
+    needs: [prepare, composer]
     runs-on: test01
     strategy:
       matrix:
