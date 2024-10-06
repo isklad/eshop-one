@@ -1,0 +1,6 @@
+docker/*
+!docker/build
+.github
+.git
+.gitignore
+.dockerignore

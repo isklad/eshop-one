@@ -1,0 +1,16 @@
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      time: "10:00"
+      timezone: "Europe/Bratislava"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    reviewers:
+      - m12o
+    assignees:
+      - m12o

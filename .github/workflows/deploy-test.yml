@@ -1,0 +1,161 @@
+name: Eshop One Deploy
+
+env:
+  docker_image_names: docker_images_export.txt
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment where to execute the command'
+        required: true
+        type: choice
+        default: test
+        options:
+          - test
+      branch:
+        description: 'Branch'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: test01
+    outputs:
+      branch: ${{ steps.env.outputs.branch }}
+      repository_name: ${{ steps.env.outputs.repository_name }}
+      docker_gw_ip: ${{ steps.env.outputs.docker_gw_ip }}
+    steps:
+      - name: Setup env
+        id: env
+        run: |
+          echo "branch=${{ github.event.inputs.branch || github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "repository_name=${GITHUB_REPOSITORY##*/}" >> $GITHUB_OUTPUT
+          echo "docker_gw_ip=$(ip route | grep default | awk '{print $3}')" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.env.outputs.branch }}
+          fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        env:
+          runner: self-hosted
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: Check PHP version
+        run: |
+          php -v
+
+  composer:
+    name: Composer install
+    needs: [prepare]
+    runs-on: test01
+    steps:
+      - name: Get composer cache files directory
+        id: composer_cache
+        run: |
+          echo "composer_cache_files_dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer_cache.outputs.composer_cache_files_dir }}
+          key: ${{ needs.prepare.outputs.repository_name }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Validate composer.json and composer.lock
+        run: |
+          composer validate --no-check-all
+
+      - name: Install composer dependencies
+        run: |
+          composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction --optimize-autoloader
+
+  build-images:
+    name: Build images
+    needs: [prepare]
+    runs-on: test01
+    strategy:
+      matrix:
+        image: [nginx, php]
+    steps:
+      - name: Log in to github container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ vars.GHCR_RO_USER }}
+          password: ${{ secrets.GHCR_RO_TOKEN }}
+
+      - name: Build docker images
+        uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_CHECKS_ANNOTATIONS: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
+          DOCKER_BUILD_SUMMARY: false
+        with:
+          tags: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-${{ matrix.image }}:latest
+          file: docker/build/${{ matrix.image }}/Dockerfile
+          context: '.'
+          platforms: linux/amd64
+          cache-from: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-${{ matrix.image }}:latest
+          cache-to: type=inline
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
+            GIT_BRANCH=${{ needs.prepare.outputs.branch }}
+          provenance: false
+
+      - name: Export docker image names
+        run: |
+          echo "docker_image_${{ matrix.image }}=${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-${{ matrix.image }}:latest" >> ${{ env.docker_image_names }}
+
+  deploy:
+    name: Deploy containers
+    needs: [prepare, build-images]
+    runs-on: test01
+    env:
+      TEMPLATE_FILE: docker/deploy/docker-compose.j2
+      RENDERED_FILE: /opt/docker-compose/docker-compose-${{ needs.prepare.outputs.repository_name }}.yml
+      RENDER_SCRIPT: docker/deploy/docker-compose.py
+    steps:
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install python dependencies
+        run: |
+          pip install jinja2
+
+      - name: Import ${{ env.docker_image_names }}
+        id: docker_image_names
+        run: |
+          while read VAR; do
+            echo "${VAR}" >> $GITHUB_OUTPUT
+          done < ${{ env.docker_image_names }}
+
+      - name: Render docker-compose file
+        env:
+          RENDERED_FILE: /opt/docker-compose/docker-compose-${{ needs.prepare.outputs.repository_name }}.yml
+          DOCKER_SERVICE_NAME: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}
+          DOCKER_IMAGE_PHP: ${{ steps.docker_image_names.outputs.docker_image_php }}
+          DOCKER_IMAGE_NGINX: ${{ steps.docker_image_names.outputs.docker_image_nginx }}
+          PHP_BACKEND_ADDR: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-php
+        run: |
+          python ${{ env.RENDER_SCRIPT }}
+
+      - name: Remove ${{ env.docker_image_names }}
+        run: |
+          rm -f ${{ env.docker_image_names }}
+
+      - name: Deploy containers
+        env:
+          DOCKER_COMPOSE_FILE: ${{ env.RENDERED_FILE }}
+        run: |
+          sudo chroot /host/rootdir docker-compose -f ${{ env.DOCKER_COMPOSE_FILE }} -p ${{ needs.prepare.outputs.repository_name }} up -d --remove-orphans --quiet-pull
