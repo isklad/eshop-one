@@ -4,3 +4,4 @@ docker/*
 .git
 .gitignore
 .dockerignore
+docker_images_export.txt
