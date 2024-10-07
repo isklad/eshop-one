@@ -170,10 +170,6 @@ jobs:
         run: |
           python ${{ env.RENDER_SCRIPT }}
 
-      - name: Remove ${{ env.docker_image_names }}
-        run: |
-          rm -f ${{ env.docker_image_names }}
-
       - name: Deploy containers
         env:
           DOCKER_COMPOSE_FILE: ${{ env.RENDERED_FILE }}
