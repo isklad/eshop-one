@@ -56,6 +56,21 @@ jobs:
         run: |
           php -v
 
+      - name: Create ini file
+        run: |
+          echo \
+          'Y2xpZW50SWQ9MDE5MTRhOWEtYzdlYS03ZTgzLThhM2YtZGVkZmNhMGQzOTFmCmNsaWVudFNlY3Jl
+          dD0wMTkxNGE5YS1jN2VhLTdlODMtOGEzZi1kZWRmY2EwZDM5MWYKZXNob3BJZD0zNApkYXRhRGly
+          PS4vZGF0YQp3aWRnZXRKc1VybD1odHRwczovL215b3JkZXItdGVzdC5pc2tsYWQuZXUvd2lkZ2V0
+          L2NhcnQvc2hvcC8KY2xpZW50VG9rZW5Vcmw9aHR0cHM6Ly9hdXRoLXRlc3QuaXNrbGFkLmV1L2F1
+          dGgvYWNjZXNzLXRva2VuCmlza2xhZEFwaURldmljZUlkZW50aXR5UmVxdWVzdFVybD1odHRwczov
+          L2F1dGgtdGVzdC5pc2tsYWQuZXUvYXBpL2NsaWVudC9kZXZpY2UtaWRlbnRpdHktcmVxdWVzdApt
+          eW9yZGVyRG9tYWluPWh0dHBzOi8vbXlvcmRlci10ZXN0Lmlza2xhZC5ldQprZXlEZXZpY2VJZD1f
+          aXNrbGFkX2RldmljZUlkCmtleURldmljZUlkZW50aXR5UmVxdWVzdElkPV9pc2tsYWRfZGV2aWNl
+          SWRlbnRpdHlSZXF1ZXN0SWQKa2V5Q3NyZlRva2VuPV9pc2tsYWRfY3NyZl90b2tlbgpkaXNwbGF5
+          RXJyb3JzPXRydWUKZ29vZ2xlQXBpS2V5PUdPT0dMRV9BUElfS0VZCg==' | base64 -d > env.ini && \
+          sed -i 's/GOOGLE_API_KEY/${{ secrets.GOOGLE_API_KEY }}/' env.ini
+
   composer:
     name: Composer install
     needs: [prepare]
