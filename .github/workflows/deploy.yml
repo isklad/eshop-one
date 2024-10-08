@@ -1,8 +1,5 @@
 name: Eshop One Deploy
 
-env:
-  docker_image_names: docker_images_export.txt
-
 on:
   workflow_dispatch:
     inputs:
@@ -133,7 +130,7 @@ jobs:
 
       - name: Export docker image names
         run: |
-          echo "docker_image_${{ matrix.image }}=${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-${{ matrix.image }}:latest" >> ${{ env.docker_image_names }}
+          echo "docker_image_${{ matrix.image }}=${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-${{ matrix.image }}:latest" >> $GITHUB_ENV
 
   deploy:
     name: Deploy containers
@@ -153,19 +150,12 @@ jobs:
         run: |
           pip install jinja2
 
-      - name: Import ${{ env.docker_image_names }}
-        id: docker_image_names
-        run: |
-          while read VAR; do
-            echo "${VAR}" >> $GITHUB_OUTPUT
-          done < ${{ env.docker_image_names }}
-
       - name: Render docker-compose file
         env:
           RENDERED_FILE: /opt/docker-compose/docker-compose-${{ needs.prepare.outputs.repository_name }}.yml
           DOCKER_SERVICE_NAME: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}
-          DOCKER_IMAGE_PHP: ${{ steps.docker_image_names.outputs.docker_image_php }}
-          DOCKER_IMAGE_NGINX: ${{ steps.docker_image_names.outputs.docker_image_nginx }}
+          DOCKER_IMAGE_PHP: ${{ env.docker_image_php }}
+          DOCKER_IMAGE_NGINX: ${{ env.docker_image_nginx }}
           PHP_BACKEND_ADDR: ${{ needs.prepare.outputs.repository_name }}-${{ github.event.inputs.environment }}-php
         run: |
           python ${{ env.RENDER_SCRIPT }}
