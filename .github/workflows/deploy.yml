@@ -1,4 +1,4 @@
-name: Eshop One Deploy
+name: Deploy App
 
 env:
   docker_image_names: docker_images_export.txt
