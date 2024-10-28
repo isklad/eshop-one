@@ -24,7 +24,7 @@ $app = new IskladApp(
         myorder-api-url="https://shop-one.local/myorder.php"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
-        shop-id="7"
+        shop-id="<?= $app->env()->getEshopId() ?>"
         role="shippingBtn"
         show-modal="<?= $app->isShowWidgetModal() ?>"
         device-id="<?= $app->getDeviceId() ?>"
