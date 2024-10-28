@@ -30,5 +30,8 @@ $app = new IskladApp(
         device-id="<?= $app->getDeviceId() ?>"
         device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
 ></isklad-myorder>
+<hr>
+<h5>debug</h5>
+<isklad-myorder role="debug"></isklad-myorder>
 </body>
 </html>
