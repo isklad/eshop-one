@@ -21,7 +21,7 @@ $app = new IskladApp(
 </head>
 <body>
 <isklad-myorder
-        myorder-api-url="https://shop-one.local/myorder.php"
+        myorder-api-url="<?= $app->env()->getIni()['middlewareUrl'] ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
@@ -30,5 +30,8 @@ $app = new IskladApp(
         device-id="<?= $app->getDeviceId() ?>"
         device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
 ></isklad-myorder>
+<hr>
+<h5>Detail</h5>
+<isklad-myorder role="shippingDetail"></isklad-myorder>
 </body>
 </html>

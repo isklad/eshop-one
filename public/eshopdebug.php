@@ -21,7 +21,7 @@ $app = new IskladApp(
 </head>
 <body>
 <isklad-myorder
-        myorder-api-url="https://shop-one.local/myorder.php"
+        myorder-api-url="<?= $app->env()->getIni()['middlewareUrl'] ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
