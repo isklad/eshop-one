@@ -16,6 +16,12 @@ services:
       options:
         max-size: 5m
         max-file: '5'
+    {%- if docker_env_vars %}
+    environment:
+    {%- for env_var in docker_env_vars.split('\n') %}
+      - {{ env_var }}
+      {%- endfor %}
+    {%- endif %}
 
   {{ DOCKER_SERVICE_NAME }}-nginx:
     image: {{ DOCKER_IMAGE_NGINX }}
