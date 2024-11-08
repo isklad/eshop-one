@@ -29,9 +29,10 @@ $app = new IskladApp(
         show-modal="<?= $app->isShowWidgetModal() ?>"
         device-id="<?= $app->getDeviceId() ?>"
         device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
+        theme="dark"
 ></isklad-myorder>
 <hr>
 <h5>Detail</h5>
-<isklad-myorder role="shippingDetail"></isklad-myorder>
+<isklad-myorder role="shippingDetail" theme="dark"></isklad-myorder>
 </body>
 </html>
