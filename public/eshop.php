@@ -23,6 +23,7 @@ $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Title</title>
     <script src="<?= $app->env()->getWidgetJsUrl() ?>"></script>
 </head>
