@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/isklad/myorder-cart-widget-middleware.git",
-                "reference": "8c9efa75cf032d3474b9af3b118278b13d948849"
+                "reference": "7de70b0b7e3c10d486a2a5bdbf999682ad9e796f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/8c9efa75cf032d3474b9af3b118278b13d948849",
-                "reference": "8c9efa75cf032d3474b9af3b118278b13d948849",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/7de70b0b7e3c10d486a2a5bdbf999682ad9e796f",
+                "reference": "7de70b0b7e3c10d486a2a5bdbf999682ad9e796f",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
                 "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/main",
                 "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
             },
-            "time": "2024-11-12T09:18:10+00:00"
+            "time": "2024-11-25T14:40:07+00:00"
         }
     ],
     "packages-dev": [],
