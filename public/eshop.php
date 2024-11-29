@@ -77,7 +77,7 @@ $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?
         country-code="<?= $_SESSION['country-code'] ?>"
         order-weight="<?= $_SESSION['order-weight'] ?>"
         order-price="<?= $_SESSION['order-price'] ?>"
-        order-currencycurrency="<?= $_SESSION['order-currency'] ?>"
+        order-currency="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
 ></isklad-myorder>
 <hr>
