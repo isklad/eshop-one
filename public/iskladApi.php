@@ -8,4 +8,4 @@ $app = new IskladApp(
     IskladEnv::fromIniFile(__DIR__ . '/../env.ini')
 );
 
-$app->myorderApiController();
+$app->iskladController();

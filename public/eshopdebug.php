@@ -22,14 +22,12 @@ $app = new IskladApp(
 </head>
 <body>
 <isklad-myorder
-        myorder-api-url="<?= $app->env()->getIni()['middlewareUrl'] ?>"
+        myorder-api-url="<?= $app->env()->getMiddlewareUrl() ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
         role="shippingBtn"
-        show-modal="<?= $app->isShowWidgetModal() ?>"
         device-id="<?= $app->getDeviceId() ?>"
-        device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
         theme="dark"
 ></isklad-myorder>
 <hr>

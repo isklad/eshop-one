@@ -66,14 +66,12 @@ $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?
 <hr>
 <h5>Button</h5>
 <isklad-myorder
-        myorder-api-url="<?= $app->env()->getIni()['middlewareUrl'] ?>"
+        isklad-middleware-url="<?= $app->env()->getMiddlewareUrl() ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
         role="shippingBtn"
-        show-modal="<?= $app->isShowWidgetModal() ?>"
         device-id="<?= $app->getDeviceId() ?>"
-        device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
         country-code="<?= $_SESSION['country-code'] ?>"
         order-weight="<?= $_SESSION['order-weight'] ?>"
         order-price="<?= $_SESSION['order-price'] ?>"
