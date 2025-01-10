@@ -17,6 +17,7 @@ $_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-pri
 $_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 700);
 $_SESSION['order-currency'] = $_GET['order-currency'] ?? $_SESSION['order-currency'] ?? 'EUR';
 $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?? 'sk';
+$_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
 
 ?>
 <!DOCTYPE html>
@@ -49,6 +50,10 @@ $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?
             <td><input type="text" name="country-code" value="<?= $_SESSION['country-code'] ?>"></td>
         </tr>
         <tr>
+            <td>Locale</td>
+            <td><input type="text" name="locale" value="<?= $_SESSION['locale'] ?>"></td>
+        </tr>
+        <tr>
             <td>Order price</td>
             <td><input type="number" name="order-price" value="<?= $_SESSION['order-price'] ?>"></td>
         </tr>
@@ -73,6 +78,7 @@ $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?
         role="shippingBtn"
         device-id="<?= $app->getDeviceId() ?>"
         country-code="<?= $_SESSION['country-code'] ?>"
+        locale="<?= $_SESSION['locale'] ?>"
         order-weight="<?= $_SESSION['order-weight'] ?>"
         order-price="<?= $_SESSION['order-price'] ?>"
         order-currency="<?= $_SESSION['order-currency'] ?>"
