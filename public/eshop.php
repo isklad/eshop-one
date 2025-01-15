@@ -87,5 +87,11 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
 <hr>
 <h5>Detail</h5>
 <isklad-myorder role="shippingDetail" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<p>bla</p>
+<hr>
+<h3>Fast checkout</h3>
+<isklad-myorder role="checkoutBtn" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<p>bla</p>
+<hr>
 </body>
 </html>
