@@ -83,6 +83,22 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
         order-price="<?= $_SESSION['order-price'] ?>"
         order-currency="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
+        order-products='[
+        {
+          "imageUrl": "https://fastcheckout.goodfridays.sk/images/img1.png",
+          "name": "Apple",
+          "description": "iPhone 16 Pro",
+          "quantity": 1,
+          "price": 1199
+        },
+        {
+          "imageUrl": "https://fastcheckout.goodfridays.sk/images/img1.png",
+          "name": "Apple",
+          "description": "Macbook Pro 14",
+          "quantity": 1,
+          "price": 3100
+        }
+      ]'
 ></isklad-myorder>
 <hr>
 <h5>Detail</h5>
