@@ -10,12 +10,14 @@ services:
     restart: always
     networks:
       app-network:
-        ipv4_address: 172.20.0.111
+        ipv4_address: {{ DOCKER_PHP_IP_ADDR }}
     logging:
       driver: json-file
       options:
         max-size: 5m
         max-file: '5'
+    volumes:
+      - /opt/docker-compose/persistent/{{ DOCKER_SERVICE_NAME }}/php-sessions:{{ ENV_PHP_INI_SESSION_SAVE_PATH }}
     {%- if docker_env_vars %}
     environment:
     {%- for env_var in docker_env_vars.split('\n') %}
@@ -29,7 +31,7 @@ services:
     restart: always
     networks:
       app-network:
-        ipv4_address: 172.20.0.112
+        ipv4_address: {{ DOCKER_NGINX_IP_ADDR }}
     logging:
       driver: json-file
       options:
