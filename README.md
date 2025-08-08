@@ -15,48 +15,59 @@ To set up the middleware correctly, follow the documentation on https://github.c
 Full configuration:
 ```html
 <isklad-myorder
-        myorder-api-url="https://shop-one.local/myorder.php"
+        isklad-middleware-url="<?= $app->env()->getMiddlewareUrl() ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
-        show-modal="<?= $app->isShowWidgetModal() ?>"
+        google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
         role="shippingBtn"
-        device-identity-request-id="<?= $app->getDeviceIdentityRequestId() ?>"
         device-id="<?= $app->getDeviceId() ?>"
-        google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         country-code="sk"
-        order-weight="700"
-        order-price="97.54"
+        locale="sk"
+        order-weight="1652"
+        order-price="2198"
         order-currency="eur"
+        theme="light"
+        order-products='[
+        {
+          "imageUrl": "https://eshop-one-test.isklad.eu/images/iphone_1.webp",
+          "name": "Apple",
+          "description": "iPhone 16 Pro",
+          "quantity": 1,
+          "price": 1199
+        },
+        {
+          "imageUrl": "https://eshop-one-test.isklad.eu/images/macbook_air_1.webp",
+          "name": "Apple",
+          "description": "Macbook Air",
+          "quantity": 1,
+          "price": 999
+        }
+      ]'
 ></isklad-myorder>
 ```
 
 ## Configuration options
-`myorder-api-url` - This is the URL to the middleware endpoint. 
-All requests from the widget are made through this endpoint.
+`isklad-middleware-url` - This is the URL to the middleware endpoint. 
+All requests from the widget (GET, POST, PUT, PATCH, DELETE) are made through this endpoint.
 
 `csrf-token` - This is the token used for communication with the middleware.
 All requests to the middleware must have it.
 
-`show-modal` - Flag that determines the initial visual state of the widget.
-When set to `true`, the widget overlay opens right away.
-This value is handled my the middleware, it is set to true when we receive a callback with set `device-id`.
+`google-api-key` - This is the API key used for Google Maps APIs.
+It is required to allow the following APIs for the key: `maps`, `marker`, `places`, `geometry`.
+See: https://developers.google.com/maps/documentation/javascript/get-api-key
 
 `shop-id` - This is the id of the shop used by myorder.
 
 `role` - This determines the type of widget to render. 
 Possible values: `shippingDetail`, `shippingBtn`, `debug`
 
-`device-identity-request-id` - This is the ID of the authorized request to identify user's device.
-This ID is generated automatically by the middleware, if the `device-id` option is empty.
-
 `device-id` - This is the ID associated with the session cookie on https://auth.isklad.eu
 It is used to retrieve and store user's addresses via API.
 
-`google-api-key` - This is the API key used for Google Maps APIs.
-It is required to allow the following APIs for the key: `maps`, `marker`, `places`, `geometry`.
-See: https://developers.google.com/maps/documentation/javascript/get-api-key
-
 `country-code` - If the country code is set, the widget will skip the step for selecting country.
+
+`locale` - Will determine the language of the widget.
 
 `order-weight` - If the weight of the order is set, it will be used to determine the delivery price according to the myorder price settings.
 
@@ -64,4 +75,16 @@ See: https://developers.google.com/maps/documentation/javascript/get-api-key
 
 `order-currency` - If the currency is set, it will be used for the prices in the widget.
 If it is not set, the currency of the country defined via `country-code` will be used.
+
+`theme` - Possible values: `light`, `dark`.
+
+`order-products` - This is the array of products in the order.
+
+| Field       | Description                          |
+|-------------|--------------------------------------|
+| imageUrl    | (string) URL of the product image.   |
+| name        | (string) Name of the product.        |
+| description | (string) Description of the product. |
+| quantity    | (number) Number of products.         |
+| price       | (number) Price of the product.       |
 

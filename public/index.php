@@ -13,8 +13,8 @@ $app = new IskladApp(
 );
 
 $_SESSION['theme'] = $_GET['theme'] ?? $_SESSION['theme'] ?? 'dark';
-$_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-price'] ?? 50.21);
-$_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 700);
+$_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-price'] ?? 2198);
+$_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 1652);
 $_SESSION['order-currency'] = $_GET['order-currency'] ?? $_SESSION['order-currency'] ?? 'EUR';
 $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?? 'sk';
 $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
@@ -30,7 +30,7 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
 </head>
 <body>
 <h5>Widget config</h5>
-<form action="eshop.php" method="get">
+<form action="index.php" method="get">
     <table>
         <tr>
             <td>Theme</td>
@@ -85,18 +85,18 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
         theme="<?= $_SESSION['theme'] ?>"
         order-products='[
         {
-          "imageUrl": "https://fastcheckout.goodfridays.sk/images/img1.png",
+          "imageUrl": "<?= $app->env()->getIni()['eshopUrl'] ?>/images/iphone_1.webp",
           "name": "Apple",
           "description": "iPhone 16 Pro",
           "quantity": 1,
           "price": 1199
         },
         {
-          "imageUrl": "https://fastcheckout.goodfridays.sk/images/img1.png",
+          "imageUrl": "<?= $app->env()->getIni()['eshopUrl'] ?>/images/macbook_air_1.webp",
           "name": "Apple",
-          "description": "Macbook Pro 14",
+          "description": "Macbook Air",
           "quantity": 1,
-          "price": 3100
+          "price": 999
         }
       ]'
 ></isklad-myorder>
