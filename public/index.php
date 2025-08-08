@@ -85,14 +85,14 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
         theme="<?= $_SESSION['theme'] ?>"
         order-products='[
         {
-          "imageUrl": "<?= $app->env()->getIni()['eshopUrl'] ?>/images/iphone_1.webp",
+          "imageUrl": "https://eshop-one-test.isklad.eu/images/iphone_1.webp",
           "name": "Apple",
           "description": "iPhone 16 Pro",
           "quantity": 1,
           "price": 1199
         },
         {
-          "imageUrl": "<?= $app->env()->getIni()['eshopUrl'] ?>/images/macbook_air_1.webp",
+          "imageUrl": "https://eshop-one-test.isklad.eu/images/macbook_air_1.webp",
           "name": "Apple",
           "description": "Macbook Air",
           "quantity": 1,
