@@ -27,6 +27,13 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Title</title>
     <script src="<?= $app->env()->getWidgetJsUrl() ?>"></script>
+    <script>
+        (function () {
+            document.querySelector('isklad-myorder:first-of-type').addEventListener('widgetChange', (event) => {
+                console.log(event.detail)
+            })
+        })()
+    </script>
 </head>
 <body>
 <h5>Widget config</h5>
