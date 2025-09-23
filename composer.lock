@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/isklad/myorder-cart-widget-middleware.git",
-                "reference": "2930ae5ca9431749c92b624a560764cb76f9b46f"
+                "reference": "f289a7a7261d1199ebfc5cb5c88cf03fb7617af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/2930ae5ca9431749c92b624a560764cb76f9b46f",
-                "reference": "2930ae5ca9431749c92b624a560764cb76f9b46f",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/f289a7a7261d1199ebfc5cb5c88cf03fb7617af9",
+                "reference": "f289a7a7261d1199ebfc5cb5c88cf03fb7617af9",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
                 "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/main",
                 "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
             },
-            "time": "2025-02-18T10:43:17+00:00"
+            "time": "2025-09-23T14:12:04+00:00"
         }
     ],
     "packages-dev": [],
@@ -53,6 +53,6 @@
         "ext-json": "*",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

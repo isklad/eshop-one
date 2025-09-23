@@ -28,11 +28,11 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
     <title>Title</title>
     <script src="<?= $app->env()->getWidgetJsUrl() ?>"></script>
     <script>
-        (function () {
+        window.addEventListener('DOMContentLoaded', () => {
             document.querySelector('isklad-myorder:first-of-type').addEventListener('widgetChange', (event) => {
                 console.log(event.detail)
             })
-        })()
+        })
     </script>
 </head>
 <body>
