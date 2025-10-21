@@ -88,3 +88,7 @@ If it is not set, the currency of the country defined via `country-code` will be
 | quantity    | (number) Number of products.         |
 | price       | (number) Price of the product.       |
 
+## Events
+`widgetChange` - This event is triggered when the widget is closed, contains all data selected by user.
+`widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user.
+`widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.

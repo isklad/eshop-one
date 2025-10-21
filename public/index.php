@@ -29,8 +29,12 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
     <script src="<?= $app->env()->getWidgetJsUrl() ?>"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('isklad-myorder:first-of-type').addEventListener('widgetChange', (event) => {
-                console.log(event.detail)
+            const myorderEl = document.querySelector('isklad-myorder:first-of-type')
+            myorderEl.addEventListener('widgetChange', (event) => {
+                console.log('EVENT: widgetChange', event.detail[0])
+            })
+            myorderEl.addEventListener('widgetOrderSubmitted', (event) => {
+                console.log('EVENT: widgetOrderSubmitted', event.detail[0])
             })
         })
     </script>
