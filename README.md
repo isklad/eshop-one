@@ -27,12 +27,14 @@ Full configuration:
         order-price="2198"
         order-currency="eur"
         theme="light"
+        lead-time="24"
         order-products='[
         {
           "imageUrl": "https://eshop-one-test.isklad.eu/images/iphone_1.webp",
           "name": "Apple",
           "description": "iPhone 16 Pro",
           "quantity": 1,
+          "leadTime": 24,
           "price": 1199
         },
         {
@@ -40,6 +42,7 @@ Full configuration:
           "name": "Apple",
           "description": "Macbook Air",
           "quantity": 1,
+          "leadTime": 0,
           "price": 999
         }
       ]'
@@ -78,15 +81,19 @@ If it is not set, the currency of the country defined via `country-code` will be
 
 `theme` - Possible values: `light`, `dark`.
 
+`leadTime` - This is the leadTime for the order in hours. Widget will calculate delivery times from now plus this value.
+This value is optional. It can also be specified in the `order-products` array for each product, in which case the max value will be used.
+
 `order-products` - This is the array of products in the order.
 
-| Field       | Description                          |
-|-------------|--------------------------------------|
-| imageUrl    | (string) URL of the product image.   |
-| name        | (string) Name of the product.        |
-| description | (string) Description of the product. |
-| quantity    | (number) Number of products.         |
-| price       | (number) Price of the product.       |
+| Field       | Description                              |
+|-------------|------------------------------------------|
+| imageUrl    | (string) URL of the product image.       |
+| name        | (string) Name of the product.            |
+| description | (string) Description of the product.     |
+| quantity    | (number) Number of products.             |
+| leadTime    | (?number) Optional leadTime for product. |
+| price       | (number) Price of the product.           |
 
 ## Events
 `widgetChange` - This event is triggered when the widget is closed, contains all data selected by user.
