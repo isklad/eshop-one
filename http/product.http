@@ -1,0 +1,12 @@
+### Get product 1
+GET {{eshopBackendUrl}}?api=product&id=1
+Content-Type: application/json
+
+### Get product 2
+GET {{eshopBackendUrl}}?api=product&id=2
+Content-Type: application/json
+
+### Product not found
+GET {{eshopBackendUrl}}?api=product&id=9
+Content-Type: application/json
+

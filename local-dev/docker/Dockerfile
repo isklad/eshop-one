@@ -10,6 +10,7 @@ RUN mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 COPY local-dev/certs/auth.isklad.local/cert.crt /usr/local/share/ca-certificates/auth.crt
 COPY local-dev/certs/myorder.isklad.local/cert.crt /usr/local/share/ca-certificates/myorder.crt
 COPY local-dev/certs/egon.isklad.local/cert.crt /usr/local/share/ca-certificates/egon.crt
+COPY local-dev/certs/eshop-one.isklad.local/cert.crt /usr/local/share/ca-certificates/eshop-one.crt
 
 RUN update-ca-certificates
 

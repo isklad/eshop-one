@@ -25,6 +25,7 @@ services:
       - auth.isklad.local:host-gateway
       - myorder.isklad.local:host-gateway
       - egon-api.isklad.local:host-gateway
+      - eshop-one.isklad.local:host-gateway
 
 networks:
   app-network:

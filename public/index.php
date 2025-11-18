@@ -96,18 +96,12 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
         theme="<?= $_SESSION['theme'] ?>"
         order-products='[
         {
-          "imageUrl": "https://eshop-one-test.isklad.eu/images/iphone_1.webp",
-          "name": "Apple",
-          "description": "iPhone 16 Pro",
+          "id": "1",
           "quantity": 1,
-          "price": 1199
         },
         {
-          "imageUrl": "https://eshop-one-test.isklad.eu/images/macbook_air_1.webp",
-          "name": "Apple",
-          "description": "Macbook Air",
+          "id": "2",
           "quantity": 1,
-          "price": 999
         }
       ]'
 ></isklad-myorder>
