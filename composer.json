@@ -5,7 +5,7 @@
     "php": ">=7.4",
     "ext-json": "*",
     "ext-curl": "*",
-    "isklad/myorder-cart-widget-middleware": "dev-main"
+    "isklad/myorder-cart-widget-middleware": "^0.0.1"
   },
   "autoload": {
     "psr-4": {
