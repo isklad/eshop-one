@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e494c08e9d4b20ab24df33b390476372",
+    "content-hash": "ae5c94f6d00d5683a308f4633287a78c",
     "packages": [
         {
             "name": "isklad/myorder-cart-widget-middleware",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/isklad/myorder-cart-widget-middleware.git",
-                "reference": "2b5c145fdb3a3df7b60e6e6c5c5d4b456d95f319"
+                "reference": "dff1bb8ce79b9bad7d7695e56b68766f3df1a521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/2b5c145fdb3a3df7b60e6e6c5c5d4b456d95f319",
-                "reference": "2b5c145fdb3a3df7b60e6e6c5c5d4b456d95f319",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/dff1bb8ce79b9bad7d7695e56b68766f3df1a521",
+                "reference": "dff1bb8ce79b9bad7d7695e56b68766f3df1a521",
                 "shasum": ""
             },
             "require": {
@@ -34,10 +34,10 @@
             },
             "description": "Isklad Myorder cart widget middleware.",
             "support": {
-                "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/0.0.1",
+                "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/0.0.2",
                 "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
             },
-            "time": "2025-12-02T07:28:11+00:00"
+            "time": "2025-12-02T08:37:57+00:00"
         },
         {
             "name": "lcobucci/jwt",
