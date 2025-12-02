@@ -5,6 +5,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+use App\Cart\CartRepository;
 use Isklad\MyorderCartWidgetMiddleware\IskladApp;
 use Isklad\MyorderCartWidgetMiddleware\IskladEnv;
 
@@ -19,6 +20,7 @@ $_SESSION['order-currency'] = $_GET['order-currency'] ?? $_SESSION['order-curren
 $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?? 'sk';
 $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
 
+$cart = $app->getSigned((array) CartRepository::getCart());
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -94,22 +96,7 @@ $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
         order-price="<?= $_SESSION['order-price'] ?>"
         order-currency="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
-        order-products='[
-        {
-          "imageUrl": "https://eshop-one-test.isklad.eu/images/iphone_1.webp",
-          "name": "Apple",
-          "description": "iPhone 16 Pro",
-          "quantity": 1,
-          "price": 1199
-        },
-        {
-          "imageUrl": "https://eshop-one-test.isklad.eu/images/macbook_air_1.webp",
-          "name": "Apple",
-          "description": "Macbook Air",
-          "quantity": 1,
-          "price": 999
-        }
-      ]'
+        cart="<?= $cart->toString() ?>"
 ></isklad-myorder>
 <hr>
 <h5>Detail</h5>
