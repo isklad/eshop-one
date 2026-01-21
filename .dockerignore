@@ -5,3 +5,4 @@ docker/*
 .gitignore
 .dockerignore
 docker_images_export.txt
+.ssh/
