@@ -1,0 +1,33 @@
+services:
+  eshop-one-nginx:
+    image: nginx:latest
+    ports:
+      - "8891:80"
+    volumes:
+      - .:/var/www/html
+      - ./local-dev/docker/eshop-one.isklad.local.conf:/etc/nginx/conf.d/eshop-one.isklad.local.conf
+    depends_on:
+      - eshop-one-php
+    networks:
+      - app-network
+      - isklad-network
+
+  eshop-one-php:
+    build:
+      context: .
+      dockerfile: local-dev/docker/Dockerfile
+    volumes:
+      - .:/var/www/html
+    networks:
+      - app-network
+      - isklad-network
+    extra_hosts:
+      - auth.isklad.local:host-gateway
+      - myorder.isklad.local:host-gateway
+      - egon-api.isklad.local:host-gateway
+      - eshop-one.isklad.local:host-gateway
+
+networks:
+  app-network:
+  isklad-network:
+    external: true

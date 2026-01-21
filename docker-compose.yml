@@ -1,33 +1,65 @@
 services:
   eshop-one-nginx:
-    image: nginx:latest
-    ports:
-      - "8891:80"
-    volumes:
-      - .:/var/www/html
-      - ./local-dev/docker/eshop-one.isklad.local.conf:/etc/nginx/conf.d/eshop-one.isklad.local.conf
+    build:
+      context: ./
+      dockerfile: docker/build/nginx/Dockerfile
+    container_name: eshop-one-nginx
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: 5
     depends_on:
       - eshop-one-php
     networks:
-      - app-network
-      - isklad-network
+      isklad-network:
+      isklad-proxy:
+        aliases:
+          - eshop-one.docker.isklad.eu
+    env_file:
+      - .env
+      - .env.local
+    environment:
+      - NGINX_DEF_PORT=80
+      - NGINX_CORS_CONF=enabled
+      - PHP_BACKEND_ADDR=eshop-one-php
+      - NGINX_CLIENT_MAX_BODY_SIZE=50M
+      - VIRTUAL_HOST=eshop-one.docker.isklad.eu
+    volumes:
+      - ./:/var/www
 
   eshop-one-php:
     build:
-      context: .
-      dockerfile: local-dev/docker/Dockerfile
-    volumes:
-      - .:/var/www/html
+      context: ./
+      dockerfile: docker/build/php/Dockerfile
+    container_name: eshop-one-php
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: 5
     networks:
-      - app-network
       - isklad-network
-    extra_hosts:
-      - auth.isklad.local:host-gateway
-      - myorder.isklad.local:host-gateway
-      - egon-api.isklad.local:host-gateway
-      - eshop-one.isklad.local:host-gateway
+    env_file:
+      - .env
+      - .env.local
+    environment:
+      - USER_ID=${USER_ID:-1000}
+      - USER_GROUP_ID=${USER_GROUP_ID:-1000}
+      - VAULT_ADDR=https://vault.k8s-dev.infra.isklad.eu
+      - VAULT_ROLE_ID=66034da0-3d75-1d4e-71dc-dd4419314792
+      - VAULT_SECRET_ID=64d4929a-0a62-3496-2685-c5f8cd2cbabe
+      - PHP_EXT_XDEBUG=enabled
+      - PHP_REQUEST_TERMINATE_TIMEOUT=0
+      - PHP_INI_OPCACHE_VALIDATE_TIMESTAMPS=1
+      - PHP_INI_UPLOAD_MAX_FILESIZE=50M
+      - PHP_INI_POST_MAX_SIZE=50M
+      - PHP_INI_MEMORY_LIMIT=512M
+    volumes:
+      - ./:/var/www
 
 networks:
-  app-network:
   isklad-network:
+    external: true
+  isklad-proxy:
     external: true

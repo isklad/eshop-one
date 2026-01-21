@@ -1,4 +1,4 @@
-ARG NGINX_IMAGE=1.27.1-bookworm_1
+ARG NGINX_IMAGE=1.27.4-bookworm_10
 
 FROM ghcr.io/isklad/nginx:${NGINX_IMAGE}
 
