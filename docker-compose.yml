@@ -44,6 +44,7 @@ services:
       - .env
       - .env.local
     environment:
+      - LOCAL_DEV=true
       - USER_ID=${USER_ID:-1000}
       - USER_GROUP_ID=${USER_GROUP_ID:-1000}
       - VAULT_ADDR=https://vault.k8s-dev.infra.isklad.eu
@@ -57,6 +58,11 @@ services:
       - PHP_INI_MEMORY_LIMIT=512M
     volumes:
       - ./:/var/www
+      - isklad-ssl:/certs:ro
+
+volumes:
+  isklad-ssl:
+    external: true
 
 networks:
   isklad-network:

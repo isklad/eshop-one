@@ -1,4 +1,4 @@
-ARG PHP_IMAGE=8.4.6-fpm-bookworm_5
+ARG PHP_IMAGE=8.4.6-fpm-bookworm_6
 
 FROM ghcr.io/isklad/php-fpm:${PHP_IMAGE}
 
