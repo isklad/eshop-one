@@ -47,9 +47,6 @@ services:
       - LOCAL_DEV=true
       - USER_ID=${USER_ID:-1000}
       - USER_GROUP_ID=${USER_GROUP_ID:-1000}
-      - VAULT_ADDR=https://vault.k8s-dev.infra.isklad.eu
-      - VAULT_ROLE_ID=66034da0-3d75-1d4e-71dc-dd4419314792
-      - VAULT_SECRET_ID=64d4929a-0a62-3496-2685-c5f8cd2cbabe
       - PHP_EXT_XDEBUG=enabled
       - PHP_REQUEST_TERMINATE_TIMEOUT=0
       - PHP_INI_OPCACHE_VALIDATE_TIMESTAMPS=1
