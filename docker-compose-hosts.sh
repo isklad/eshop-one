@@ -61,11 +61,6 @@ set_hosts_mappings() {
   local SERVICE HOSTNAME
   source .env
 
-  if [[ -z "${LOCAL_IP}" ]]; then
-    echo "LOCAL_IP variable is not set."
-    return 1
-  fi
-
   HOSTS_MAPPINGS="/tmp/docker_compose_hosts_mappings_${REPO_NAME}"
   SERVICES=$(${DOCKER_COMPOSE} -f "${DOCKER_COMPOSE_FILE}" -p "${REPO_NAME}" ps --services)
 
@@ -92,9 +87,23 @@ set_hosts_mappings() {
   done
 
   if [[ -n "${HOSTNAMES}" || -n "${VIRTUAL_HOSTS}" ]]; then
+    if [[ -n "${HOSTNAMES}" ]]; then
+      if [[ -z "${LOCAL_IP}" ]]; then
+        echo "Containers aliases detected: ${HOSTNAMES}"
+        echo "but LOCAL_IP variable not set!"
+        echo ""
+      fi
+    fi
+
     echo "Add below lines into your hosts file:"
-    [[ -n "${VIRTUAL_HOSTS}" ]] && echo "127.0.0.1 ${VIRTUAL_HOSTS}"
-    [[ -n "${HOSTNAMES}" ]] && echo "${LOCAL_IP} ${HOSTNAMES}"
+    if [[ -n "${VIRTUAL_HOSTS}" ]]; then
+      echo "127.0.0.1 ${VIRTUAL_HOSTS}"
+    fi
+    if [[ -n "${HOSTNAMES}" ]]; then
+      if [[ -n "${LOCAL_IP}" ]]; then
+        echo "${LOCAL_IP} ${HOSTNAMES}"
+      fi
+    fi
     echo "::1 $([[ -n ${VIRTUAL_HOSTS} ]] && echo "${VIRTUAL_HOSTS}")$([[ -n ${HOSTNAMES} ]] && echo "${HOSTNAMES}")"
   fi
 }
