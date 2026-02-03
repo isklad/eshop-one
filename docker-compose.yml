@@ -53,6 +53,12 @@ services:
       - PHP_INI_UPLOAD_MAX_FILESIZE=50M
       - PHP_INI_POST_MAX_SIZE=50M
       - PHP_INI_MEMORY_LIMIT=512M
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      - auth.docker.isklad.eu:host-gateway
+      - myorder.docker.isklad.eu:host-gateway
+      - egon.docker.isklad.eu:host-gateway
+      - egon-api.docker.isklad.eu:host-gateway
     volumes:
       - ./:/var/www
       - isklad-ssl:/certs:ro
