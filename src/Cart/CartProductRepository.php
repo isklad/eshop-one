@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\CartProduct;
+namespace App\Cart;
+
+use Isklad\MyorderCartWidgetMiddleware\Cart\CartProduct;
 
 final class CartProductRepository
 {

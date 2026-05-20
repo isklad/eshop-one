@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Cart;
 
-use App\CartProduct\CartProductRepository;
+use Isklad\MyorderCartWidgetMiddleware\Cart\Cart;
 
 final class CartRepository
 {

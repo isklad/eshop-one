@@ -2,3 +2,4 @@ vendor
 .idea
 env.ini
 /.bash_history
+.composer
