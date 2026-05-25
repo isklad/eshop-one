@@ -107,11 +107,9 @@ You may also use in Vue for example like this: `<isklad-myorder @widgetOrderSubm
 ## Methods
 `openWidget('shipping' | 'checkout')` - opens the widget programmatically. Tip: combine with `role="empty"` to open the widget with own button or logic.  
 `closeWidget()` - closes the widget programmatically.  
-`setState({orderExternalId: string)` - Set your external order id that will be propagated to Egon order.  
 
 Example usage:
 ```js
 const myorderWidget = document.querySelector('isklad-myorder')
       myorderWidget.openWidget('checkout')
-      myorderWidget.setState({ orderExternalId: 'my-shop-order-id' })
 ```
