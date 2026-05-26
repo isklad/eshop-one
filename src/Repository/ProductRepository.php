@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Cart;
+namespace App\Repository;
 
-use Isklad\MyorderCartWidgetMiddleware\Cart\CartProduct;
+use Isklad\MyorderCartWidgetMiddleware\Model\Product;
 
-final class CartProductRepository
+final class ProductRepository
 {
-    public static function getProductById(string $id): CartProduct
+    public static function getProductById(string $id): Product
     {
-        $product = new CartProduct();
+        $product = new Product();
         $product->id = $id;
         $product->quantity = 1;
 

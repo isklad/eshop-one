@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Cart;
+namespace App\Repository;
 
-use Isklad\MyorderCartWidgetMiddleware\Cart\Cart;
+use Isklad\MyorderCartWidgetMiddleware\Model\Cart;
 
 final class CartRepository
 {
@@ -12,7 +12,9 @@ final class CartRepository
         $cart = new Cart();
         $cart->orderExternalId = 'ext-' . time();
         $cart->currency = 'EUR';
-        $cart->products = CartProductRepository::getProducts();
+        $cart->products = ProductRepository::getProducts();
+        $cart->address = AddressRepository::getAddress();
+        $cart->person = PersonRepository::getPerson();
 
         return $cart;
     }

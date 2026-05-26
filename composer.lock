@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "isklad/myorder-cart-widget-middleware",
-            "version": "0.0.5",
+            "version": "0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/isklad/myorder-cart-widget-middleware.git",
-                "reference": "2644aa1c88c4a419168d45246f9ad2a6638fa6ca"
+                "reference": "e33e28aecf9b3c2ab68503791a9bb9ce86e7f7d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/2644aa1c88c4a419168d45246f9ad2a6638fa6ca",
-                "reference": "2644aa1c88c4a419168d45246f9ad2a6638fa6ca",
+                "url": "https://api.github.com/repos/isklad/myorder-cart-widget-middleware/zipball/e33e28aecf9b3c2ab68503791a9bb9ce86e7f7d4",
+                "reference": "e33e28aecf9b3c2ab68503791a9bb9ce86e7f7d4",
                 "shasum": ""
             },
             "require": {
@@ -34,10 +34,10 @@
             },
             "description": "Isklad Myorder cart widget middleware.",
             "support": {
-                "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/0.0.5",
+                "source": "https://github.com/isklad/myorder-cart-widget-middleware/tree/0.0.6",
                 "issues": "https://github.com/isklad/myorder-cart-widget-middleware/issues"
             },
-            "time": "2026-05-25T08:45:33+00:00"
+            "time": "2026-05-26T14:24:46+00:00"
         },
         {
             "name": "lcobucci/jwt",
