@@ -14,6 +14,7 @@ final class PersonRepository
         $person->surname = 'Novák';
         $person->email = 'jan.novak@isklad.eu';
         $person->phone = '+421908111222';
+        $person->phoneRegion = 'SK';
 
         return $person;
     }
