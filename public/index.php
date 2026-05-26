@@ -38,6 +38,18 @@ $cart = $app->getSigned((array) CartRepository::getCart());
             myorderEl.addEventListener('widgetOrderSubmitted', (event) => {
                 console.log('EVENT: widgetOrderSubmitted', event.detail[0])
             })
+            const identifyDeviceBtn = document.getElementById('identifyDeviceBtn')
+            identifyDeviceBtn.addEventListener('click', () => {
+                myorderEl.identifyDevice()
+            })
+            const openCheckoutBtn = document.getElementById('openCheckoutBtn')
+            openCheckoutBtn.addEventListener('click', () => {
+                myorderEl.openWidget('checkout')
+            })
+            myorderEl.addEventListener('deliveryAddressIdentified', (event) => {
+                console.log('EVENT: deliveryAddressIdentified', event.detail[0])
+                openCheckoutBtn.disabled = false
+            })
         })
     </script>
 </head>
@@ -97,6 +109,7 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         order-currency="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
         cart="<?= $cart->toString() ?>"
+        order-type="fulfillment"
 ></isklad-myorder>
 <hr>
 <h5>Detail</h5>
@@ -105,6 +118,14 @@ $cart = $app->getSigned((array) CartRepository::getCart());
 <hr>
 <h3>Fast checkout</h3>
 <isklad-myorder role="checkoutBtn" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<hr>
+<h3>Fast checkout - custom buttons</h3>
+<isklad-myorder role="empty" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<button id="identifyDeviceBtn">Identity device</button>
+<button id="openCheckoutBtn" disabled>Open checkout</button>
+<hr>
+<h3>Debug</h3>
+<isklad-myorder role="debug" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
 <p>bla</p>
 <hr>
 </body>

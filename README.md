@@ -94,7 +94,8 @@ It can also be specified in the `cart` for each product, in which case the max v
 ## Events
 `widgetChange` - This event is triggered when the widget is closed, contains all data selected by user (country, deliveryOption, paymentMethod, currency, checkoutExtras etc..).  
 `widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user just like `widgetChange` but also contains order.  
-`widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.
+`widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.  
+`deliveryAddressIdentified` - This event is triggered when delivery address for the given deviceId is identified.  
 
 Example usage:
 ```js
@@ -107,6 +108,7 @@ You may also use in Vue for example like this: `<isklad-myorder @widgetOrderSubm
 ## Methods
 `openWidget('shipping' | 'checkout')` - opens the widget programmatically. Tip: combine with `role="empty"` to open the widget with own button or logic.  
 `closeWidget()` - closes the widget programmatically.  
+`identifyDevice()` - attempts to identify the device and stores the deviceId in session. This method is called automatically when the widget is opened.  
 
 Example usage:
 ```js
