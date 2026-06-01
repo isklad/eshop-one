@@ -38,6 +38,7 @@ services:
         max-size: 5m
         max-file: '5'
     environment:
+      - NGINX_CORS_CONF=enabled
       - NGINX_STATUS_ALLOW=127.0.0.1
       - NGINX_FPM_STATUS_ALLOW=127.0.0.1
       - PHP_BACKEND_ADDR={{ PHP_BACKEND_ADDR }}
