@@ -92,10 +92,34 @@ It can also be specified in the `cart` for each product, in which case the max v
 `order-type` - (optional) If defined, widget will create an order in myorder/egon. Possible values: `fulfillment`, `virtual`, `c2c`.
 
 ## Events
-`widgetChange` - This event is triggered when the widget is closed, contains all data selected by user (country, deliveryOption, paymentMethod, currency, checkoutExtras etc..).  
-`widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user just like `widgetChange` but also contains order.  
 `widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.  
-`deliveryAddressIdentified` - This event is triggered when delivery address for the given deviceId is identified.  
+`widgetChange` - This event is triggered when the widget is closed, contains all data selected by user.
+```typescript
+interface TWidgetChangeEvent {
+    deliveryCountry?: Object
+    deliveryOption?: Object
+    deliveryPoint?: Object
+    packetaPoint?: Object
+    deliveryAddress?: Object
+    paymentMethod?: Object
+    checkoutExtras?: Object[]
+    mainAddress?: Object
+    shoppingCartPrice?: number
+    currency: Object
+    order?: Object
+}
+```
+
+`widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user just like `widgetChange` but also contains order.  
+`widgetUserIdentity` - This event is triggered when user identity is either found, not found or fetching. See `TWidgetUserIdentityEvent` below.
+
+```typescript
+interface TWidgetUserIdentityEvent {
+  userIdentityFetched: boolean|null // null if fetching, true if found, false if not found
+  userHasIdentity: boolean // true if user has identity
+  widgetOpenStrategy: string // the strategy used to open the widget (you may change this in egon)
+}
+```
 
 Example usage:
 ```js
@@ -106,7 +130,7 @@ document.querySelector('isklad-myorder').addEventListener('widgetOrderSubmitted'
 You may also use in Vue for example like this: `<isklad-myorder @widgetOrderSubmitted="onOrderSubmittedDoSomething"`
 
 ## Methods
-`openWidget('shipping' | 'checkout')` - opens the widget programmatically. Tip: combine with `role="empty"` to open the widget with own button or logic.  
+`openWidget('shipping' | 'checkout' | undefined)` - opens the widget programmatically in selected flow, or undefined for cases when using [Widget open strategy](#widget-open-strategy). Tip: combine with `role="empty"` to open the widget with own button or logic.  
 `closeWidget()` - closes the widget programmatically.  
 `identifyDevice()` - attempts to identify the device and stores the deviceId in session. This method is called automatically when the widget is opened.  
 
@@ -115,3 +139,11 @@ Example usage:
 const myorderWidget = document.querySelector('isklad-myorder')
       myorderWidget.openWidget('checkout')
 ```
+
+### Widget open strategy
+If you want to open the widget in a specific flow based on the fact that the user has identity, you can set this strategy in egon settings.  
+
+`checkout` - opens checkout flow in both cases (when user has identity, the data is already preset).  
+`checkoutOrShipping` - opens checkout flow if user has identity, shipping flow otherwise.  
+`checkoutOrNothing` - opens checkout flow if user has identity, otherwise do nothing.  
+`none` - expects the widget to be opened programmatically with given flow as parameter.  

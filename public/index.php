@@ -31,23 +31,25 @@ $cart = $app->getSigned((array) CartRepository::getCart());
     <script src="<?= $app->env()->getWidgetJsUrl() ?>"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
+
             const myorderEl = document.querySelector('isklad-myorder:first-of-type')
+            const identifyDeviceBtn = document.getElementById('identifyDeviceBtn')
+            const openCheckoutBtn = document.getElementById('openCheckoutBtn')
+
             myorderEl.addEventListener('widgetChange', (event) => {
                 console.log('EVENT: widgetChange', event.detail[0])
             })
             myorderEl.addEventListener('widgetOrderSubmitted', (event) => {
                 console.log('EVENT: widgetOrderSubmitted', event.detail[0])
             })
-            const identifyDeviceBtn = document.getElementById('identifyDeviceBtn')
             identifyDeviceBtn.addEventListener('click', () => {
                 myorderEl.identifyDevice()
             })
-            const openCheckoutBtn = document.getElementById('openCheckoutBtn')
             openCheckoutBtn.addEventListener('click', () => {
-                myorderEl.openWidget('checkout')
+                myorderEl.openWidget()
             })
-            myorderEl.addEventListener('deliveryAddressIdentified', (event) => {
-                console.log('EVENT: deliveryAddressIdentified', event.detail[0])
+            myorderEl.addEventListener('widgetUserIdentity', (event) => {
+                console.log('EVENT: widgetUserIdentity', event.detail[0])
                 openCheckoutBtn.disabled = false
             })
         })
