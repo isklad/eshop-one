@@ -74,7 +74,7 @@ If it is not set, the currency of the country defined via `country-code` will be
 
 `cart` - This is a JWToken signed with private key, containing cart data.
 See [signing section for middleware](https://github.com/isklad/myorder-cart-widget-middleware#signing-data-with-private-key)
-See [cart data format](https://github.com/isklad/myorder-cart-widget-middleware/blob/main/src/Cart/Cart.php)
+See [cart data format](https://github.com/isklad/myorder-cart-widget-middleware/blob/main/src/Model/Cart.php)
 See example cart data in [CartRepository.php](src/Repository/CartRepository.php) and [CartProductRepository.php](src/Repository/ProductRepository.php)
 
 Example usage: 
