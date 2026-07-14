@@ -1,0 +1,12 @@
+### Get JWT for myorder
+POST {{authHost}}/auth/access-token
+Content-Type: application/json
+
+{
+  "clientId": "{{authFactcoolClientId}}",
+  "clientSecret": "{{authFactcoolClientSecret}}"
+}
+
+> {%
+  client.global.set('token_client', response.body.accessToken);
+%}
