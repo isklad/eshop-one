@@ -93,7 +93,7 @@ It can also be specified in the `cart` for each product, in which case the max v
 
 ## Events
 `widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.  
-`widgetChange` - This event is triggered when the widget is closed, contains all data selected by user.
+`widgetChange` - This event is triggered when the widget is closed, contains all data selected by user. See details here: [widget_change.md](widget_change.md)
 ```typescript
 interface TWidgetChangeEvent {
     deliveryCountry?: Object
