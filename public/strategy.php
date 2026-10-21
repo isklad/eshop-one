@@ -81,7 +81,7 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         locale="sk"
         order-weight="1652"
         order-price="2198"
-        order-currency="EUR"
+        currency-code="EUR"
         theme="dark"
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"

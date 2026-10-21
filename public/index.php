@@ -108,7 +108,7 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         locale="<?= $_SESSION['locale'] ?>"
         order-weight="<?= $_SESSION['order-weight'] ?>"
         order-price="<?= $_SESSION['order-price'] ?>"
-        order-currency="<?= $_SESSION['order-currency'] ?>"
+        currency-code="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"
