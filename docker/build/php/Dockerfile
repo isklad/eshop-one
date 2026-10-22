@@ -1,4 +1,4 @@
-ARG PHP_IMAGE=8.4.6-fpm-bookworm_6
+ARG PHP_IMAGE=8.4.27-fpm-bookworm_1
 
 FROM registry.digitalocean.com/isklad/php-fpm:${PHP_IMAGE}
 
