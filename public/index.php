@@ -9,10 +9,34 @@ use App\Repository\CartRepository;
 use Isklad\MyorderCartWidgetMiddleware\IskladApp;
 use Isklad\MyorderCartWidgetMiddleware\IskladEnv;
 
+// "Drop session and reload": a new visitor. Done before the app starts, which would request a new device identity
+// into the old session. The browser storage is cleared by the button itself.
+if ('POST' === $_SERVER['REQUEST_METHOD'] && 'drop-session' === ($_POST['action'] ?? null)) {
+    session_start();
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 42000,
+            'path' => $params['path'],
+            'domain' => $params['domain'],
+            'secure' => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?: 'Lax',
+        ]);
+    }
+    session_destroy();
+    header('Location: index.php', true, 303);
+    exit;
+}
+
 $app = new IskladApp(
     IskladEnv::fromIniFile(__DIR__ . '/../env.ini')
 );
 
+$flow = $_GET['flow'] ?? $_SESSION['flow'] ?? 'shipping';
+$_SESSION['flow'] = in_array($flow, ['shipping', 'checkout'], true) ? $flow : 'shipping';
+$isCheckoutFlow = $_SESSION['flow'] === 'checkout';
 $_SESSION['theme'] = $_GET['theme'] ?? $_SESSION['theme'] ?? 'dark';
 $_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-price'] ?? 2198);
 $_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 1652);
@@ -42,15 +66,17 @@ $cart = $app->getSigned((array) CartRepository::getCart());
             myorderEl.addEventListener('widgetOrderSubmitted', (event) => {
                 console.log('EVENT: widgetOrderSubmitted', event.detail[0])
             })
-            identifyDeviceBtn.addEventListener('click', () => {
+            identifyDeviceBtn?.addEventListener('click', () => {
                 myorderEl.identifyDevice()
             })
-            openCheckoutBtn.addEventListener('click', () => {
+            openCheckoutBtn?.addEventListener('click', () => {
                 myorderEl.openWidget()
             })
             myorderEl.addEventListener('widgetUserIdentity', (event) => {
                 console.log('EVENT: widgetUserIdentity', event.detail[0])
-                openCheckoutBtn.disabled = false
+                if (openCheckoutBtn) {
+                    openCheckoutBtn.disabled = false
+                }
             })
         })
     </script>
@@ -59,6 +85,15 @@ $cart = $app->getSigned((array) CartRepository::getCart());
 <h5>Widget config</h5>
 <form action="index.php" method="get">
     <table>
+        <tr>
+            <td>Flow</td>
+            <td>
+                <select name="flow">
+                    <option value="shipping" <?= !$isCheckoutFlow ? 'selected' : '' ?>>shipping</option>
+                    <option value="checkout" <?= $isCheckoutFlow ? 'selected' : '' ?>>checkout</option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td>Theme</td>
             <td>
@@ -95,14 +130,19 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         </tr>
     </table>
 </form>
+<form action="index.php" method="post" onsubmit="localStorage.clear(); sessionStorage.clear()">
+    <input type="hidden" name="action" value="drop-session">
+    <button type="submit">Drop session and reload</button>
+</form>
 <hr>
-<h5>Button</h5>
+<!-- The first widget on the page carries the configuration and renders the app, the others are just its roles. -->
+<h5><?= $isCheckoutFlow ? 'Fast checkout (checkoutBtn)' : 'Button (shippingBtn)' ?></h5>
 <isklad-myorder
         isklad-middleware-url="<?= $app->env()->getMiddlewareUrl() ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
         google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
-        role="shippingBtn"
+        role="<?= $isCheckoutFlow ? 'checkoutBtn' : 'shippingBtn' ?>"
         device-id="<?= $app->getDeviceId() ?>"
         country-code="<?= $_SESSION['country-code'] ?>"
         locale="<?= $_SESSION['locale'] ?>"
@@ -113,22 +153,33 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"
 ></isklad-myorder>
+<?php if ($isCheckoutFlow): ?>
 <hr>
-<h5>Detail</h5>
-<isklad-myorder role="shippingDetail" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
-<p>bla</p>
-<hr>
-<h3>Fast checkout</h3>
-<isklad-myorder role="checkoutBtn" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
-<hr>
-<h3>Fast checkout - custom buttons</h3>
+<h5>Fast checkout - custom buttons (empty)</h5>
 <isklad-myorder role="empty" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
 <button id="identifyDeviceBtn">Identity device</button>
 <button id="openCheckoutBtn" disabled>Open checkout</button>
+<?php else: ?>
 <hr>
-<h3>Debug</h3>
-<isklad-myorder role="debug" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
-<p>bla</p>
+<h5>Detail (shippingDetail)</h5>
+<isklad-myorder role="shippingDetail" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
 <hr>
+<h5>Compact (shippingCompact)</h5>
+<isklad-myorder role="shippingCompact" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<hr>
+<h5>Delivery options (shippingDelivery)</h5>
+<isklad-myorder role="shippingDelivery" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<hr>
+<h5>Delivery options - small (shippingDeliveryCompact)</h5>
+<isklad-myorder role="shippingDeliveryCompact" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<hr>
+<h5>Delivery tile (shippingDeliveryTiles)</h5>
+<isklad-myorder role="shippingDeliveryTiles" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<?php endif; ?>
+<hr>
+<h5>Debug</h5>
+<div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd">
+    <isklad-myorder role="debug" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+</div>
 </body>
 </html>
