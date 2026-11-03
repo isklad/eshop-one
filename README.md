@@ -48,6 +48,7 @@ Full configuration:
         custom-request="yourCustomHttpRequestFunction"
         device-id="<?= $app->getDeviceId() ?>"
         google-api-key="yourGoogleApiKey"
+        google-map-id="yourGoogleMapId"
         country-code="sk"
         locale="sk"
         order-weight="1652"
@@ -106,9 +107,23 @@ Note: when set, the widget does not attach the CSRF token header, your method is
 It is used to retrieve and store user's addresses and favorites via API. It can be replaced with user's MyOrder UUID if using `user` mode.
 
 `google-api-key` - (required) This is the API key used for Google Maps APIs.
-It is required to allow the following APIs for the key: `maps`, `marker`, `places`, `geometry`.
-Restrict the key to your website's domain (HTTP referrer restriction), since it is visible in the page source.
+Enable these APIs in your Google Cloud project and allow them for the key (API restrictions):
+- `Maps JavaScript API` - the map and the pickup point markers.
+- `Places API (New)` - address search and the place search on the pickup point map
+  (used also when the address lookup of the delivery option is `egon`).
+- `Geocoding API` - (optional) detection of the delivery country by the customer's location. It is used only on the
+  delivery country selection, when no country is preselected (by `country-code` or the customer's main address) and
+  the customer allows the location in the browser. Without it, the customer selects the country.
+
+Restrict the key to your website's domain (Application restriction: HTTP referrers), since it is visible in the page source.
+All the APIs above are called from the browser via Maps JavaScript API, so they all work with the referrer-restricted key.
 See: https://developers.google.com/maps/documentation/javascript/get-api-key
+
+`google-map-id` - (optional) The Map ID of the widget's map, required by the pickup point markers.
+A Map ID works only with an API key from the same Google Cloud project, so create your own Map ID
+(Google Maps Platform > Map management, map type `JavaScript`) in the project of your `google-api-key`.
+Defaults to the iSklad Map ID, which works only with iSklad's API keys.
+See: https://developers.google.com/maps/documentation/get-map-id
 
 `country-code` - If the country code is set, the widget will preselect this country of delivery and skip the step for selecting it.
 
