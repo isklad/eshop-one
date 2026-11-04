@@ -8,11 +8,11 @@ use Isklad\MyorderCartWidgetMiddleware\Model\CartUser;
 
 final class CartRepository
 {
-    public static function getCart(float $vat = 23): Cart
+    public static function getCart(float $vat = 0, string $currency = 'EUR'): Cart
     {
         $cart = new Cart();
         $cart->orderExternalId = 'ext-' . time();
-        $cart->currency = 'EUR';
+        $cart->currency = $currency;
         $cart->vat = $vat;
         $cart->products = ProductRepository::getProducts();
 
