@@ -40,6 +40,7 @@ $isCheckoutFlow = $_SESSION['flow'] === 'checkout';
 $_SESSION['theme'] = $_GET['theme'] ?? $_SESSION['theme'] ?? 'dark';
 $_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-price'] ?? 2198);
 $_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 1652);
+$_SESSION['vat'] = (float) ($_GET['vat'] ?? $_SESSION['vat'] ?? 23);
 $_SESSION['order-currency'] = $_GET['order-currency'] ?? $_SESSION['order-currency'] ?? 'EUR';
 $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?? 'sk';
 $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
@@ -124,6 +125,10 @@ $cart = $app->getSigned((array) CartRepository::getCart());
             <td><input type="number" name="order-weight" value="<?= $_SESSION['order-weight'] ?>"></td>
         </tr>
         <tr>
+            <td>VAT %</td>
+            <td><input type="number" step="0.01" name="vat" value="<?= $_SESSION['vat'] ?>"></td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit"/>
             </td>
@@ -148,6 +153,7 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         locale="<?= $_SESSION['locale'] ?>"
         order-weight="<?= $_SESSION['order-weight'] ?>"
         order-price="<?= $_SESSION['order-price'] ?>"
+        vat="<?= $_SESSION['vat'] ?>"
         currency-code="<?= $_SESSION['order-currency'] ?>"
         theme="<?= $_SESSION['theme'] ?>"
         cart="<?= $cart->toString() ?>"

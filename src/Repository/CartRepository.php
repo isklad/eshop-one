@@ -13,6 +13,7 @@ final class CartRepository
         $cart = new Cart();
         $cart->orderExternalId = 'ext-' . time();
         $cart->currency = 'EUR';
+        $cart->vat = 23;
         $cart->products = ProductRepository::getProducts();
 
         $buyer = new CartUser();

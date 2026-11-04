@@ -53,6 +53,7 @@ Full configuration:
         locale="sk"
         order-weight="1652"
         order-price="2198"
+        vat="23"
         currency-code="EUR"
         cart="<?= $app->getSigned($cartData)->toString() ?>"
         theme="light"
@@ -130,9 +131,16 @@ See: https://developers.google.com/maps/documentation/get-map-id
 `locale` - Will determine the language of the widget. Defaults to `en`. 
 Possible values: `ar`, `bg`, `Zh-CN`, `hr`, `cs`, `da`, `nl`, `en`, `et`, `fi`, `fr`, `de`, `el`, `hu`, `it`, `ja`, `lv`, `lt`, `lb`, `no`, `pl`, `pt`, `ro`, `ru`, `sk`, `sl`, `es`, `sv`, `tr`, `uk`.
 
-`order-weight` - If the weight of the order is set, it will be used to determine the delivery price according to the myorder price settings.
+`order-weight` - If the weight of the order is set (grams), it will be used to determine the delivery price according to the myorder price settings.
+If it is not set, the average package weight of the shop is used.
+Ignored when `cart` is set, the weight is then taken from the signed cart (`weight`).
 
-`order-price` - If the price of the order is set, it will be used to determine the delivery price according to the myorder price settings.
+`order-price` - If the price of the order is set (in the order currency), it will be used to determine the delivery price according to the myorder price settings
+(i.e. free delivery above an amount).
+Ignored when `cart` is set, the price is then the sum of the signed cart products (`price` × `quantity`).
+
+`vat` - (optional) Defaults to `0`. VAT percentage (i.e. `23`) added to the delivery prices, unless the delivery price is set as fixed in the price settings.
+Ignored when `cart` is set, the VAT is then taken from the signed cart (`vat`), and the order is created with it.
 
 `currency-code` - If the currency is set (3-letter ISO code, i.e. `EUR`), it will be used for the prices in the widget.
 If it is not set, the currency of the country defined via `country-code` will be used.
