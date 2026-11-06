@@ -45,7 +45,12 @@ $_SESSION['order-currency'] = $_GET['order-currency'] ?? $_SESSION['order-curren
 $_SESSION['country-code'] = $_GET['country-code'] ?? $_SESSION['country-code'] ?? 'sk';
 $_SESSION['locale'] = $_GET['locale'] ?? $_SESSION['locale'] ?? 'sk';
 
-$cart = $app->getSigned((array) CartRepository::getCart($_SESSION['vat'], $_SESSION['order-currency']));
+$cart = $app->getSigned((array) CartRepository::getCart(
+    $_SESSION['vat'],
+    $_SESSION['order-currency'],
+    $_SESSION['order-price'],
+    $_SESSION['order-weight'],
+));
 ?>
 <!DOCTYPE html>
 <html lang="en">
