@@ -78,6 +78,34 @@ $cart = $app->getSigned((array) CartRepository::getCart(
             openCheckoutBtn?.addEventListener('click', () => {
                 myorderEl.openWidget()
             })
+
+            // Own delivery option select (role="empty"): the options come from the widget, the chosen one is set
+            // back into it and the widget opens where its destination is picked (map, Packeta widget, addresses).
+            const ownSelect = document.getElementById('ownDeliveryOptionSelect')
+            const ownSetBtn = document.getElementById('ownDeliveryOptionSetBtn')
+            const fillOwnSelect = (selectedId) => {
+                if (!ownSelect || typeof myorderEl.getDeliveryOptions !== 'function') {
+                    return
+                }
+                const deliveryOptions = myorderEl.getDeliveryOptions()
+                ownSelect.replaceChildren(...deliveryOptions.map((deliveryOption) => new Option(
+                    deliveryOption.name + ' (' + deliveryOption.deliveryMode + ', ' + deliveryOption.price + ')',
+                    String(deliveryOption.id),
+                    false,
+                    deliveryOption.id === selectedId,
+                )))
+                ownSelect.disabled = ownSetBtn.disabled = deliveryOptions.length === 0
+            }
+            myorderEl.addEventListener('widgetInitialized', () => fillOwnSelect())
+            fillOwnSelect() // in case the widget was initialized before this listener
+            // The options depend on the delivery country, which the customer may change in the widget.
+            myorderEl.addEventListener('widgetChange', (event) => fillOwnSelect(event.detail[0].deliveryOption?.id))
+            ownSetBtn?.addEventListener('click', () => {
+                if (myorderEl.setDeliveryOption(Number(ownSelect.value))) {
+                    myorderEl.openDeliveryDestination()
+                }
+            })
+
             myorderEl.addEventListener('widgetUserIdentity', (event) => {
                 console.log('EVENT: widgetUserIdentity', event.detail[0])
                 if (openCheckoutBtn) {
@@ -186,6 +214,11 @@ $cart = $app->getSigned((array) CartRepository::getCart(
 <hr>
 <h5>Delivery tile (shippingDeliveryTiles)</h5>
 <isklad-myorder role="shippingDeliveryTiles" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<hr>
+<h5>Own delivery option select (empty + getDeliveryOptions / setDeliveryOption / openDeliveryDestination)</h5>
+<isklad-myorder role="empty" theme="<?= $_SESSION['theme'] ?>"></isklad-myorder>
+<select id="ownDeliveryOptionSelect" disabled></select>
+<button id="ownDeliveryOptionSetBtn" disabled>Set and choose the destination</button>
 <?php endif; ?>
 <hr>
 <h5>Debug</h5>

@@ -215,7 +215,16 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 > Use them to update your UI (i.e. selected delivery and its price), but verify prices and the created order on your server.
 
 ## Methods
-`openWidget('shipping' | 'checkout' | undefined)` - opens the widget programmatically in selected flow, or undefined for cases when using [Widget open strategy](#widget-open-strategy). Tip: combine with `role="empty"` to open the widget with own button or logic.  
+`openWidget('shipping' | 'checkout' | undefined, route?)` - opens the widget programmatically in selected flow, or undefined for cases when using [Widget open strategy](#widget-open-strategy). Tip: combine with `role="empty"` to open the widget with own button or logic.
+The optional `route` opens a specific screen instead of the flow's first one, i.e. `delivery_option-select`, `delivery_point-select`, `packeta-widget`, `delivery_address-select`, `delivery_address-edit`. An unknown route opens the flow's first screen.  
+`openDeliveryDestination()` - opens the shipping flow on the screen where the destination of the selected delivery option is chosen:
+the map of delivery points, the Packeta widget, or the addresses (a new address when the customer has none). Without a selected delivery option it opens the delivery options.  
+`getDeliveryOptions()` - returns the delivery options offered for the shop and the current delivery country (and the `order-type`), as shown by the widget:
+`id`, `name`, `image`, `price` (in the order currency), `deliveryMode` (`point`, `packeta`, `address`), `deliveryDate`, ...
+It is empty until the widget is initialized (`widgetInitialized` event); the list changes when the customer changes the delivery country (`widgetChange` event).  
+`setDeliveryOption(id)` - selects the delivery option by its `id` from `getDeliveryOptions()`. Returns `false` (and logs the reason to the console) when the option is not offered or the widget is not initialized.
+The already chosen destination is kept only when it belongs to the new delivery option (a delivery point of its carriers, an address for an address delivery option), otherwise it is removed and the customer chooses it again.
+The `widgetChange` event is emitted.  
 `closeWidget()` - closes the widget programmatically.  
 `identifyDevice()` - attempts to identify the device and stores the deviceId in session. This method is called automatically when the widget is opened.  
 It opens a small popup window (see [device identification](https://github.com/isklad/myorder-cart-widget-middleware#device-identification-request)), 
@@ -225,6 +234,19 @@ Example usage:
 ```js
 const myorderWidget = document.querySelector('isklad-myorder')
       myorderWidget.openWidget('checkout')
+```
+
+Own delivery option selection (with `role="empty"`), see the example in [public/index.php](public/index.php):
+```js
+const myorderWidget = document.querySelector('isklad-myorder')
+myorderWidget.addEventListener('widgetInitialized', () => {
+    const deliveryOptions = myorderWidget.getDeliveryOptions()
+    // ... render own selection of deliveryOptions
+})
+// on the customer's choice:
+if (myorderWidget.setDeliveryOption(deliveryOptionId)) {
+    myorderWidget.openDeliveryDestination() // the map, the Packeta widget or the addresses
+}
 ```
 
 ### Widget open strategy
