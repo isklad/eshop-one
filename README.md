@@ -18,7 +18,7 @@ Example implementation of myorder-cart-**widget** and myorder-cart-widget-**midd
 You will need:
 - `clientId`, `clientSecret` and `eshopId` - provided by iSklad.
 - RSA private/public key pair - the public key must be saved in Egon (see [signing data](https://github.com/isklad/myorder-cart-widget-middleware#signing-data-with-private-key)). Required only when using the `cart` (fast checkout).
-- Google API key - see [`google-api-key`](#configuration-options).
+- Your website's domain(s) allowed by iSklad for the map - see [Google Maps](#google-maps).
 - PHP >= 8.2 (required by `lcobucci/jwt` used by the middleware) with `curl`, `json` and sessions enabled.
 
 ## Add middleware
@@ -47,8 +47,6 @@ Full configuration:
         login-mode="device"
         custom-request="yourCustomHttpRequestFunction"
         device-id="<?= $app->getDeviceId() ?>"
-        google-api-key="yourGoogleApiKey"
-        google-map-id="yourGoogleMapId"
         country-code="sk"
         locale="sk"
         order-weight="1652"
@@ -75,8 +73,18 @@ Therefore, put the full configuration on the first element, see [public/index.ph
 <isklad-myorder role="checkoutBtn" theme="light"></isklad-myorder>
 ```
 
-The widget is not initialized at all (no error is shown) if the first element is missing `isklad-middleware-url`, `google-api-key`,
+The widget is not initialized at all (no error is shown) if the first element is missing `isklad-middleware-url`
 or `csrf-token` (when `login-mode="device"` is set explicitly). Watch the browser console for errors.
+
+## Google Maps
+The map, the address search and the pickup point markers use iSklad's Google API key and Map ID, which are part of the
+widget. You do not need your own Google Cloud project or API key, and the map cannot be replaced with your own.
+
+The key works only on domains allowed by iSklad. Send iSklad every domain the widget will run on (including test
+and staging domains), otherwise the map and the address search will not load there.
+
+The `google-api-key` and `google-map-id` attributes of older versions are no longer used, remove them from your page
+(they are ignored).
 
 ## Configuration options
 `isklad-middleware-url` - (required) This is the URL to the middleware endpoint. 
@@ -106,25 +114,6 @@ Note: when set, the widget does not attach the CSRF token header, your method is
 
 `device-id` - This is the device UUID stored in session by the middleware (`$app->getDeviceId()`), it is empty until the device is identified.
 It is used to retrieve and store user's addresses and favorites via API. It can be replaced with user's MyOrder UUID if using `user` mode.
-
-`google-api-key` - (required) This is the API key used for Google Maps APIs.
-Enable these APIs in your Google Cloud project and allow them for the key (API restrictions):
-- `Maps JavaScript API` - the map and the pickup point markers.
-- `Places API (New)` - address search and the place search on the pickup point map
-  (used also when the address lookup of the delivery option is `egon`).
-- `Geocoding API` - (optional) detection of the delivery country by the customer's location. It is used only on the
-  delivery country selection, when no country is preselected (by `country-code` or the customer's main address) and
-  the customer allows the location in the browser. Without it, the customer selects the country.
-
-Restrict the key to your website's domain (Application restriction: HTTP referrers), since it is visible in the page source.
-All the APIs above are called from the browser via Maps JavaScript API, so they all work with the referrer-restricted key.
-See: https://developers.google.com/maps/documentation/javascript/get-api-key
-
-`google-map-id` - (optional) The Map ID of the widget's map, required by the pickup point markers.
-A Map ID works only with an API key from the same Google Cloud project, so create your own Map ID
-(Google Maps Platform > Map management, map type `JavaScript`) in the project of your `google-api-key`.
-Defaults to the iSklad Map ID, which works only with iSklad's API keys.
-See: https://developers.google.com/maps/documentation/get-map-id
 
 `country-code` - If the country code is set, the widget will preselect this country of delivery and skip the step for selecting it.
 

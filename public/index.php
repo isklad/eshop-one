@@ -178,7 +178,6 @@ $cart = $app->getSigned((array) CartRepository::getCart(
 <isklad-myorder
         isklad-middleware-url="<?= $app->env()->getMiddlewareUrl() ?>"
         csrf-token="<?= $app->getCsrfToken() ?>"
-        google-api-key="<?= $app->env()->getIni()['googleApiKey'] ?>"
         shop-id="<?= $app->env()->getEshopId() ?>"
         role="<?= $isCheckoutFlow ? 'checkoutBtn' : 'shippingBtn' ?>"
         device-id="<?= $app->getDeviceId() ?>"
