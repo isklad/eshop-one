@@ -160,6 +160,9 @@ It can also be specified in the `cart` for each product, in which case the max v
 
 `order-type` - (optional) If defined, widget will create an order in myorder/egon. Possible values: `fulfillment`, `virtual`, `c2c`.
 
+`external-payment-gate` - (optional) Defaults to `true`. Applies to orders created by the widget (`order-type`): the order is paid in your e-shop's payment gateway and the widget waits for its outcome, see [Payment of the order](#payment-of-the-order).
+Set it to `false` if you do not launch a payment gateway: the widget then shows the thank-you page right after the order is created. The value is saved with the order.
+
 ## Events
 `widgetInitialized` - This event is triggered when the widget is fully initialized and ready to use.  
 `widgetChange` - This event is triggered when the widget is closed, contains all data selected by user. See details here: [widget_change.md](widget_change.md)
@@ -206,9 +209,9 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 > Use them to update your UI (i.e. selected delivery and its price), but verify prices and the created order on your server.
 
 ## Payment of the order
-> This step is a showcase: the outcome is only shown by the widget, it is not stored with the order in MyOrder yet.
+> The outcome of the payment is only shown by the widget, it is not stored with the order in MyOrder yet.
 
-In the checkout flow the order is created by MyOrder, but it is paid in your e-shop's payment gateway:
+In the checkout flow the order is created by MyOrder, but (unless you set `external-payment-gate="false"`) it is paid in your e-shop's payment gateway:
 1. The customer confirms the order, the widget creates it and emits `widgetOrderSubmitted` (the order is in `event.detail[0].order`).
 2. The widget shows the "Waiting for the payment" screen. With a cash on delivery payment method (`paymentMethod.variant === 'cashOnDelivery'`) it shows the thank-you page right away and waits for nothing.
 3. Your e-shop launches its payment gateway.

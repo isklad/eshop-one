@@ -37,6 +37,8 @@ $app = new IskladApp(
 $flow = $_GET['flow'] ?? $_SESSION['flow'] ?? 'shipping';
 $_SESSION['flow'] = in_array($flow, ['shipping', 'checkout'], true) ? $flow : 'shipping';
 $isCheckoutFlow = $_SESSION['flow'] === 'checkout';
+$externalPaymentGate = $_GET['external-payment-gate'] ?? $_SESSION['external-payment-gate'] ?? 'true';
+$_SESSION['external-payment-gate'] = $externalPaymentGate === 'false' ? 'false' : 'true';
 $_SESSION['theme'] = $_GET['theme'] ?? $_SESSION['theme'] ?? 'dark';
 $_SESSION['order-price'] = (float) ($_GET['order-price'] ?? $_SESSION['order-price'] ?? 2198);
 $_SESSION['order-weight'] = (int) ($_GET['order-weight'] ?? $_SESSION['order-weight'] ?? 1652);
@@ -73,8 +75,12 @@ $cart = $app->getSigned((array) CartRepository::getCart(
             // how the payment ends, and reports it back to the widget with setPaymentResult().
             const gatewayEl = document.getElementById('demoGateway')
             const launchPaymentGateway = (change) => {
-                // Cash on delivery is paid to the courier, the widget does not wait for a payment.
-                if (!gatewayEl || change.paymentMethod?.variant === 'cashOnDelivery') {
+                // Without the external payment gate, or with cash on delivery (paid to the courier), the widget does
+                // not wait for a payment.
+                if (!gatewayEl
+                    || myorderEl.getAttribute('external-payment-gate') === 'false'
+                    || change.paymentMethod?.variant === 'cashOnDelivery'
+                ) {
                     return
                 }
                 document.getElementById('demoGatewayOrder').textContent = change.order?.id ?? ''
@@ -225,6 +231,15 @@ $cart = $app->getSigned((array) CartRepository::getCart(
             </td>
         </tr>
         <tr>
+            <td>External payment gate</td>
+            <td>
+                <select name="external-payment-gate">
+                    <option value="true" <?= $_SESSION['external-payment-gate'] === 'true' ? 'selected' : '' ?>>true</option>
+                    <option value="false" <?= $_SESSION['external-payment-gate'] === 'false' ? 'selected' : '' ?>>false</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td>Theme</td>
             <td>
                 <select name="theme">
@@ -286,6 +301,7 @@ $cart = $app->getSigned((array) CartRepository::getCart(
         theme="<?= $_SESSION['theme'] ?>"
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"
+        external-payment-gate="<?= $_SESSION['external-payment-gate'] ?>"
 ></isklad-myorder>
 <?php if ($isCheckoutFlow): ?>
 <hr>

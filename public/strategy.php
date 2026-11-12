@@ -84,6 +84,7 @@ $cart = $app->getSigned((array) CartRepository::getCart());
         theme="dark"
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"
+        external-payment-gate="false"
     ></isklad-myorder>
 
     <button id="identifyDeviceBtn">Some button that triggers widget identify</button>
