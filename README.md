@@ -179,7 +179,9 @@ interface TWidgetChangeEvent {
 }
 ```
 
-`widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user just like `widgetChange` but also contains order.  
+`widgetOrderSubmitted` - This event is triggered when the order has been submitted, contains all data selected by user just like `widgetChange` but also contains order.
+Unless the payment method is cash on delivery, the widget now shows "Waiting for the payment": launch your payment gateway and report its outcome, see [Payment of the order](#payment-of-the-order).  
+`widgetPaymentRetry` - This event is triggered when the customer wants to pay the submitted order again after a failed or cancelled payment (possibly with another `paymentMethod`). Same data as `widgetOrderSubmitted`. Launch your payment gateway again.  
 `widgetUserIdentity` - This event is triggered when user identity is either found, not found or fetching. See `TWidgetUserIdentityEvent` below.
 
 ```typescript
@@ -203,6 +205,40 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 > **Do not trust the event data on your server.** The events are emitted in the browser and can be modified by the customer.
 > Use them to update your UI (i.e. selected delivery and its price), but verify prices and the created order on your server.
 
+## Payment of the order
+> This step is a showcase: the outcome is only shown by the widget, it is not stored with the order in MyOrder yet.
+
+In the checkout flow the order is created by MyOrder, but it is paid in your e-shop's payment gateway:
+1. The customer confirms the order, the widget creates it and emits `widgetOrderSubmitted` (the order is in `event.detail[0].order`).
+2. The widget shows the "Waiting for the payment" screen. With a cash on delivery payment method (`paymentMethod.variant === 'cashOnDelivery'`) it shows the thank-you page right away and waits for nothing.
+3. Your e-shop launches its payment gateway.
+4. When the gateway ends, call `setPaymentResult(result)` on the first `<isklad-myorder>` element:
+
+| `result` | The widget shows |
+|---|---|
+| `{paid: true}` | the thank-you page |
+| `{paid: false, reason: 'bankDeclined'}` | "Payment didn't go through" |
+| `{paid: false, reason: 'bankTimeout'}` | "The bank check timed out" |
+| `{paid: false, reason: 'userCancelled'}` | "Payment cancelled" |
+
+On the three failure screens the customer can pay again (optionally after choosing another payment method). The widget then shows
+"Waiting for the payment" again and emits `widgetPaymentRetry`: launch the gateway again and report the new outcome the same way.
+
+```js
+const myorderWidget = document.querySelector('isklad-myorder')
+const pay = async (event) => {
+    const change = event.detail[0]
+    if (change.paymentMethod?.variant === 'cashOnDelivery') {
+        return
+    }
+    // yourPaymentGateway() is your code: it resolves with the outcome of the payment
+    const outcome = await yourPaymentGateway(change.order, change.paymentMethod)
+    myorderWidget.setPaymentResult(outcome.paid ? {paid: true} : {paid: false, reason: outcome.reason})
+}
+myorderWidget.addEventListener('widgetOrderSubmitted', pay)
+myorderWidget.addEventListener('widgetPaymentRetry', pay)
+```
+
 ## Methods
 `openWidget('shipping' | 'checkout' | undefined, route?)` - opens the widget programmatically in selected flow, or undefined for cases when using [Widget open strategy](#widget-open-strategy). Tip: combine with `role="empty"` to open the widget with own button or logic.
 The optional `route` opens a specific screen instead of the flow's first one, i.e. `delivery_option-select`, `delivery_point-select`, `packeta-widget`, `delivery_address-select`, `delivery_address-edit`. An unknown route opens the flow's first screen.  
@@ -215,6 +251,7 @@ It is empty until the widget is initialized (`widgetInitialized` event); the lis
 `setDeliveryOption(id)` - selects the delivery option by its `id` from `getDeliveryOptions()`. Returns `false` (and logs the reason to the console) when the option is not offered or the widget is not initialized.
 The already chosen destination is kept only when it belongs to the new delivery option (a delivery point of its carriers, an address for an address delivery option), otherwise it is removed and the customer chooses it again.
 The `widgetChange` event is emitted.  
+`setPaymentResult(result)` - reports the outcome of your payment gateway for the submitted order, see [Payment of the order](#payment-of-the-order). Returns `false` (and logs the reason to the console) when the widget is not waiting for a payment or the result is not valid.  
 `closeWidget()` - closes the widget programmatically.  
 `identifyDevice()` - attempts to identify the device and stores the deviceId in session. This method is called automatically when the widget is opened.  
 It opens a small popup window (see [device identification](https://github.com/isklad/myorder-cart-widget-middleware#device-identification-request)), 

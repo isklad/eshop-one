@@ -69,8 +69,37 @@ $cart = $app->getSigned((array) CartRepository::getCart(
             myorderEl.addEventListener('widgetChange', (event) => {
                 console.log('EVENT: widgetChange', event.detail[0])
             })
+            // Demo payment gateway. A real e-shop launches its own gateway here; this overlay only lets you pick
+            // how the payment ends, and reports it back to the widget with setPaymentResult().
+            const gatewayEl = document.getElementById('demoGateway')
+            const launchPaymentGateway = (change) => {
+                // Cash on delivery is paid to the courier, the widget does not wait for a payment.
+                if (!gatewayEl || change.paymentMethod?.variant === 'cashOnDelivery') {
+                    return
+                }
+                document.getElementById('demoGatewayOrder').textContent = change.order?.id ?? ''
+                document.getElementById('demoGatewayMethod').textContent = change.paymentMethod?.name ?? ''
+                gatewayEl.hidden = false
+            }
+            gatewayEl?.addEventListener('click', (event) => {
+                const btn = event.target.closest('button[data-paid]')
+                if (!btn) {
+                    return
+                }
+                gatewayEl.hidden = true
+                const result = btn.dataset.paid === 'true'
+                    ? {paid: true}
+                    : {paid: false, reason: btn.dataset.reason}
+                console.log('setPaymentResult', result, myorderEl.setPaymentResult(result))
+            })
             myorderEl.addEventListener('widgetOrderSubmitted', (event) => {
                 console.log('EVENT: widgetOrderSubmitted', event.detail[0])
+                launchPaymentGateway(event.detail[0])
+            })
+            // The customer wants to pay the same order again (after a failed or cancelled payment).
+            myorderEl.addEventListener('widgetPaymentRetry', (event) => {
+                console.log('EVENT: widgetPaymentRetry', event.detail[0])
+                launchPaymentGateway(event.detail[0])
             })
             identifyDeviceBtn?.addEventListener('click', () => {
                 myorderEl.identifyDevice()
@@ -114,8 +143,75 @@ $cart = $app->getSigned((array) CartRepository::getCart(
             })
         })
     </script>
+    <style>
+        /* Demo payment gateway: over the widget (its window is z-index 999). */
+        #demoGateway {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: grid;
+            place-items: center;
+            background: rgb(0 0 0 / 55%);
+            font-family: system-ui, sans-serif;
+        }
+        #demoGateway[hidden] {
+            display: none;
+        }
+        #demoGateway .gateway {
+            width: min(360px, calc(100vw - 32px));
+            padding: 24px;
+            border-radius: 16px;
+            background: #fff;
+            color: #111;
+            box-shadow: 0 20px 60px rgb(0 0 0 / 40%);
+        }
+        #demoGateway h2 {
+            margin: 0 0 4px;
+            font-size: 20px;
+        }
+        #demoGateway p {
+            margin: 0 0 16px;
+            font-size: 14px;
+            color: #555;
+        }
+        #demoGateway button {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #f4f4f6;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+        }
+        #demoGateway button[data-paid="true"] {
+            border-color: #15803d;
+            background: #15803d;
+            color: #fff;
+        }
+        #demoGateway code {
+            float: right;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 <body>
+<div id="demoGateway" hidden role="dialog" aria-modal="true" aria-labelledby="demoGatewayTitle">
+    <div class="gateway">
+        <h2 id="demoGatewayTitle">Payment gateway (demo)</h2>
+        <p>
+            Order <b id="demoGatewayOrder"></b>, paying with <b id="demoGatewayMethod"></b>.<br>
+            A real e-shop opens its own gateway here. Choose how the payment ends:
+        </p>
+        <button type="button" data-paid="true">Paid <code>paid: true</code></button>
+        <button type="button" data-paid="false" data-reason="bankDeclined">Bank declined <code>bankDeclined</code></button>
+        <button type="button" data-paid="false" data-reason="bankTimeout">Bank check timed out <code>bankTimeout</code></button>
+        <button type="button" data-paid="false" data-reason="userCancelled">Cancelled by the customer <code>userCancelled</code></button>
+    </div>
+</div>
 <h5>Widget config</h5>
 <form action="index.php" method="get">
     <table>
