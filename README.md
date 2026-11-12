@@ -207,7 +207,8 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 `openWidget('shipping' | 'checkout' | undefined, route?)` - opens the widget programmatically in selected flow, or undefined for cases when using [Widget open strategy](#widget-open-strategy). Tip: combine with `role="empty"` to open the widget with own button or logic.
 The optional `route` opens a specific screen instead of the flow's first one, i.e. `delivery_option-select`, `delivery_point-select`, `packeta-widget`, `delivery_address-select`, `delivery_address-edit`. An unknown route opens the flow's first screen.  
 `openDeliveryDestination()` - opens the shipping flow on the screen where the destination of the selected delivery option is chosen:
-the map of delivery points, the Packeta widget, or the addresses (a new address when the customer has none). Without a selected delivery option it opens the delivery options.  
+the map of delivery points, the Packeta widget, or the addresses (a new address when the customer has none). Without a selected delivery option it opens the delivery options.
+The "back" button on that screen closes the widget (the customer did not come through the previous screens).  
 `getDeliveryOptions()` - returns the delivery options offered for the shop and the current delivery country (and the `order-type`), as shown by the widget:
 `id`, `name`, `image`, `price` (in the order currency), `deliveryMode` (`point`, `packeta`, `address`), `deliveryDate`, ...
 It is empty until the widget is initialized (`widgetInitialized` event); the list changes when the customer changes the delivery country (`widgetChange` event).  
