@@ -208,6 +208,45 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 > **Do not trust the event data on your server.** The events are emitted in the browser and can be modified by the customer.
 > Use them to update your UI (i.e. selected delivery and its price), but verify prices and the created order on your server.
 
+### Verifying the prices on your server
+Take only the ids from the event data (`deliveryCountry.id`, `deliveryOption.id`, `currency.id`, `paymentMethod.id`, ...)
+and ask MyOrder for the prices from your server, with the order values you know on the server (never the ones sent by the browser):
+
+```
+GET /api/sys/shop-country-setting/shop/{eshopId}/country/{countryId}/delivery-option/{deliveryOptionId}/order/weight/{weight}/price/{price}/currency/{currencyId}/lead-time/{leadTime}/vat/{vat}
+```
+
+- `eshopId` - your `eshopId`.
+- `countryId`, `deliveryOptionId`, `currencyId` - `deliveryCountry.id`, `deliveryOption.id` and `currency.id` from the event data.
+- `weight`, `price`, `vat` - the same values as the widget's `order-weight` (grams), `order-price` and `vat`, or as in the signed `cart`.
+- `leadTime` - lead time of the order in hours, `0` if there is none.
+
+The request must be authorized by the client JWT, so make it with the middleware's API client:
+```php
+$url = sprintf(
+    '%s/api/sys/shop-country-setting/shop/%d/country/%d/delivery-option/%d/order/weight/%d/price/%s/currency/%d/lead-time/%d/vat/%s',
+    $app->env()->getMyorderDomain(),
+    $app->env()->getEshopId(),
+    $countryId,
+    $deliveryOptionId,
+    $orderWeight,
+    $orderPrice,
+    $currencyId,
+    $leadTime,
+    $vat,
+);
+$shopCountrySetting = $app->getApiClient()->get($url);
+
+// Empty when the delivery option is not offered for this shop, country and order.
+$deliveryOption = $shopCountrySetting['deliveryOptions'][0] ?? null;
+$deliveryPrice = $deliveryOption['price'] ?? null;
+```
+
+The response is the same as the one the widget gets for the country, only `deliveryOptions` has just the requested delivery option
+with its `price` calculated for the order (in the requested currency), or it is empty when the delivery option is not offered.
+`paymentMethods` and `checkoutExtras` are listed with their prices as well, find the selected ones by `id`.
+A `404` means the shop has no settings for the country.
+
 ## Payment of the order
 > The outcome of the payment is only shown by the widget, it is not stored with the order in MyOrder yet.
 
@@ -251,6 +290,8 @@ The "back" button on that screen closes the widget (the customer did not come th
 `getDeliveryOptions()` - returns the delivery options offered for the shop and the current delivery country (and the `order-type`), as shown by the widget:
 `id`, `name`, `image`, `price` (in the order currency), `deliveryMode` (`point`, `packeta`, `address`), `deliveryDate`, ...
 It is empty until the widget is initialized (`widgetInitialized` event); the list changes when the customer changes the delivery country (`widgetChange` event).  
+`getDeliveryCountries()` - returns the countries the shop has at least one delivery option configured for: `id`, `name`, `code`, `intlLocale`, ...
+It is empty until the widget is initialized (`widgetInitialized` event). A listed country can still have no delivery option offered for a particular order (`getDeliveryOptions()`), i.e. when there is no delivery price for it.  
 `setDeliveryOption(id)` - selects the delivery option by its `id` from `getDeliveryOptions()`. Returns `false` (and logs the reason to the console) when the option is not offered or the widget is not initialized.
 The already chosen destination is kept only when it belongs to the new delivery option (a delivery point of its carriers, an address for an address delivery option), otherwise it is removed and the customer chooses it again.
 The `widgetChange` event is emitted.  

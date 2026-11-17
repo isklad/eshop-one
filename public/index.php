@@ -224,13 +224,15 @@ $cart = $app->getSigned((array) CartRepository::getCart(
         <tr>
             <td>Flow</td>
             <td>
-                <select name="flow">
+                <select name="flow"
+                        onchange="document.getElementById('external-payment-gate-row').hidden = this.value !== 'checkout'">
                     <option value="shipping" <?= !$isCheckoutFlow ? 'selected' : '' ?>>shipping</option>
                     <option value="checkout" <?= $isCheckoutFlow ? 'selected' : '' ?>>checkout</option>
                 </select>
             </td>
         </tr>
-        <tr>
+        <!-- Applies only to the checkout flow, where the widget creates the order. -->
+        <tr id="external-payment-gate-row" <?= $isCheckoutFlow ? '' : 'hidden' ?>>
             <td>External payment gate</td>
             <td>
                 <select name="external-payment-gate">
@@ -301,7 +303,9 @@ $cart = $app->getSigned((array) CartRepository::getCart(
         theme="<?= $_SESSION['theme'] ?>"
         cart="<?= $cart->toString() ?>"
         order-type="fulfillment"
+<?php if ($isCheckoutFlow): ?>
         external-payment-gate="<?= $_SESSION['external-payment-gate'] ?>"
+<?php endif; ?>
 ></isklad-myorder>
 <?php if ($isCheckoutFlow): ?>
 <hr>
