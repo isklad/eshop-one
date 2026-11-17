@@ -43,6 +43,9 @@ interface TWidgetChange {
 interface TCountry {
   id: number
   shopCountrySetting: number | null
+  // The shop has at least one delivery option configured for the country
+  // (not a return logistic, not a point delivery without delivery points).
+  hasDeliveryOptions: boolean
   name: string
   code: string
   intlLocale: string
