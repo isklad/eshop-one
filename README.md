@@ -209,43 +209,46 @@ Listen to the events on the first `<isklad-myorder>` element (see [Multiple widg
 > Use them to update your UI (i.e. selected delivery and its price), but verify prices and the created order on your server.
 
 ### Verifying the prices on your server
-Take only the ids from the event data (`deliveryCountry.id`, `deliveryOption.id`, `currency.id`, `paymentMethod.id`, ...)
+Take only the ids and codes from the event data (`deliveryCountry.code`, `currency.code`, `deliveryOption.id`, `paymentMethod.id`, ...)
 and ask MyOrder for the prices from your server, with the order values you know on the server (never the ones sent by the browser):
 
 ```
-GET /api/sys/shop-country-setting/shop/{eshopId}/country/{countryId}/delivery-option/{deliveryOptionId}/order/weight/{weight}/price/{price}/currency/{currencyId}/lead-time/{leadTime}/vat/{vat}
+GET /api/sys/shop-country-setting/shop/{eshopId}/country/{countryCode}/order/weight/{weight}/price/{price}/currency/{currencyCode}/lead-time/{leadTime}/vat/{vat}
 ```
 
 - `eshopId` - your `eshopId`.
-- `countryId`, `deliveryOptionId`, `currencyId` - `deliveryCountry.id`, `deliveryOption.id` and `currency.id` from the event data.
+- `countryCode` - 2-letter ISO code of the delivery country in uppercase (i.e. `SK`), `deliveryCountry.code` from the event data.
+- `currencyCode` - 3-letter ISO code of the order currency in uppercase (i.e. `EUR`), the same as the widget's `currency-code`.
 - `weight`, `price`, `vat` - the same values as the widget's `order-weight` (grams), `order-price` and `vat`, or as in the signed `cart`.
 - `leadTime` - lead time of the order in hours, `0` if there is none.
 
 The request must be authorized by the client JWT, so make it with the middleware's API client:
 ```php
 $url = sprintf(
-    '%s/api/sys/shop-country-setting/shop/%d/country/%d/delivery-option/%d/order/weight/%d/price/%s/currency/%d/lead-time/%d/vat/%s',
+    '%s/api/sys/shop-country-setting/shop/%d/country/%s/order/weight/%d/price/%s/currency/%s/lead-time/%d/vat/%s',
     $app->env()->getMyorderDomain(),
     $app->env()->getEshopId(),
-    $countryId,
-    $deliveryOptionId,
+    $countryCode,
     $orderWeight,
     $orderPrice,
-    $currencyId,
+    $currencyCode,
     $leadTime,
     $vat,
 );
 $shopCountrySetting = $app->getApiClient()->get($url);
 
-// Empty when the delivery option is not offered for this shop, country and order.
-$deliveryOption = $shopCountrySetting['deliveryOptions'][0] ?? null;
-$deliveryPrice = $deliveryOption['price'] ?? null;
+// Find the delivery option selected in the widget, it is missing when it is not offered for this shop, country and order.
+$deliveryPrice = null;
+foreach ($shopCountrySetting['deliveryOptions'] as $deliveryOption) {
+    if ($deliveryOption['id'] === $deliveryOptionId) {
+        $deliveryPrice = $deliveryOption['price'];
+    }
+}
 ```
 
-The response is the same as the one the widget gets for the country, only `deliveryOptions` has just the requested delivery option
-with its `price` calculated for the order (in the requested currency), or it is empty when the delivery option is not offered.
-`paymentMethods` and `checkoutExtras` are listed with their prices as well, find the selected ones by `id`.
-A `404` means the shop has no settings for the country.
+The response is the same as the one the widget gets for the country: `deliveryOptions` offered for the order with their `price`
+calculated for it (in the requested currency), `paymentMethods` and `checkoutExtras` with their prices. Find the selected ones by `id`.
+A `404` means the country or the currency is unknown, or the shop has no settings for the country.
 
 ## Payment of the order
 > The outcome of the payment is only shown by the widget, it is not stored with the order in MyOrder yet.
