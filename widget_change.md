@@ -59,7 +59,7 @@ interface TCountry {
 interface TDeliveryOption {
   id: number
   deliveryType: 'b2c' | 'c2c' | 'c2b'
-  transportType: 'cargo' | 'pickup' | 'plane' | 'truck'
+  transportType: 'cargo' | 'parcelbox' | 'pickup' | 'plane' | 'truck'
   image: string
   name: string
   deliveryMode: 'point' | 'address' | 'packeta'
