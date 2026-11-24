@@ -1,4 +1,4 @@
-ARG NGINX_IMAGE=1.27.4-bookworm_10
+ARG NGINX_IMAGE=1.31.9-trixie_1
 
 FROM registry.digitalocean.com/isklad/nginx:${NGINX_IMAGE}
 
